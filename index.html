@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocketful — Daily Puzzles</title>
+<meta name="description" content="A pocketful of calm logic puzzles — sudoku, nonograms, and more. New daily challenges every day.">
+<style>
+  :root { color-scheme: light dark; }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
+    min-height: 100svh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 40px 24px; background: #fbfbfd; color: #21212f;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1c1c22; color: #e8e8ee; }
+    a.button { background: #0084ff; }
+    footer a { color: #9a9aa8; }
+  }
+  .tiles { display: flex; gap: 10px; margin-bottom: 28px; }
+  .tile {
+    width: 44px; height: 44px; border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 20px; color: #fff;
+    transform: rotate(var(--r));
+  }
+  h1 { font-size: 2.4em; font-weight: 800; letter-spacing: -0.02em; }
+  .tag { margin-top: 10px; font-size: 1.1em; opacity: 0.6; max-width: 26em; }
+  .soon {
+    margin-top: 30px; font-weight: 600; font-size: 0.95em;
+    padding: 10px 22px; border-radius: 999px;
+    background: rgba(0, 132, 255, 0.12); color: #0084ff;
+  }
+  footer { margin-top: 56px; font-size: 0.85em; }
+  footer a { color: #6b6b78; margin: 0 10px; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="tiles" aria-hidden="true">
+    <div class="tile" style="background:#42a0f2; --r:-6deg">7</div>
+    <div class="tile" style="background:#f2b134; --r:4deg">3</div>
+    <div class="tile" style="background:#2ec28e; --r:-3deg">★</div>
+    <div class="tile" style="background:#9e73eb; --r:7deg">1</div>
+  </div>
+  <h1>Pocketful</h1>
+  <p class="tag">A pocketful of calm logic puzzles — sudoku, nonograms, and friends.
+  New daily challenges every day.</p>
+  <p class="soon">Coming soon to the App Store</p>
+  <footer>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="mailto:benjaminyimm@gmail.com">Contact</a>
+  </footer>
+</body>
+</html>
