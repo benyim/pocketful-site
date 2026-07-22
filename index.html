@@ -96,17 +96,15 @@
     gap: 16px;
   }
   .gcard {
-    border-radius: 22px; padding: 22px 16px; text-align: center;
-    font-weight: 800; font-size: 1.05rem;
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-    aspect-ratio: 1 / 0.92; justify-content: center;
+    text-align: center; font-weight: 800; font-size: 1.02rem;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
     transition: transform 0.18s ease;
   }
-  .gcard:hover { transform: translateY(-4px); }
-  .gcard .mini { display: grid; gap: 4px; }
-  .gcard .mini.g3 { grid-template-columns: repeat(3, 1fr); }
-  .gcard .mini.g2 { grid-template-columns: repeat(2, 1fr); }
-  .gcard .mini span { width: 17px; height: 17px; border-radius: 5px; }
+  .gcard:hover { transform: translateY(-5px); }
+  .gcard img {
+    width: 100%; max-width: 132px; aspect-ratio: 1; border-radius: 26px;
+    box-shadow: 0 10px 24px rgba(33,33,47,0.12);
+  }
 
   /* ---- Feature rows ---- */
   .feature { padding: 76px 0; }
@@ -197,73 +195,16 @@
     <h2>Ten games, one calm app.</h2>
     <p>The classics you love and clever new favorites, with more on the way.</p>
     <div class="cards">
-      <div class="gcard" style="background:#d4e8ff">
-        <div class="mini g3">
-          <span style="background:#4c9ef2"></span><span style="background:#fff"></span><span style="background:#4c9ef2"></span>
-          <span style="background:#4c9ef2"></span><span style="background:#21212f"></span><span style="background:#fff"></span>
-          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
-        </div>Sudoku
-      </div>
-      <div class="gcard" style="background:#e0e2ee">
-        <div class="mini g3">
-          <span style="background:#21212f"></span><span style="background:#fff"></span><span style="background:#21212f"></span>
-          <span style="background:#fff"></span><span style="background:#21212f"></span><span style="background:#fff"></span>
-          <span style="background:#21212f"></span><span style="background:#fff"></span><span style="background:#21212f"></span>
-        </div>Nonograms
-      </div>
-      <div class="gcard" style="background:#fdf0cf">
-        <div class="mini g3">
-          <span style="background:#4c9ef2"></span><span style="background:#fab52e"></span><span style="background:#4c9ef2"></span>
-          <span style="background:#fab52e"></span><span style="background:#4c9ef2"></span><span style="background:#fab52e"></span>
-          <span style="background:#4c9ef2"></span><span style="background:#fff"></span><span style="background:#fab52e"></span>
-        </div>Duets
-      </div>
-      <div class="gcard" style="background:#fde2da">
-        <div class="mini g2">
-          <span style="background:#2ec28e;width:22px;height:22px"></span><span style="background:#8f73e8;width:22px;height:22px"></span>
-          <span style="background:#f56b66;width:22px;height:22px"></span><span style="background:#fab52e;width:22px;height:22px"></span>
-        </div>Stars
-      </div>
-      <div class="gcard" style="background:#d3f1f6">
-        <div class="mini g2">
-          <span style="background:#2ba7c9;width:22px;height:22px;border-radius:50%"></span><span style="background:#fff;width:22px;height:22px;border-radius:50%"></span>
-          <span style="background:#fff;width:22px;height:22px;border-radius:50%"></span><span style="background:#2ba7c9;width:22px;height:22px;border-radius:50%"></span>
-        </div>Bridges
-      </div>
-      <div class="gcard" style="background:#e9e0fb">
-        <div class="mini g2">
-          <span style="background:#4c9ef2;width:22px;height:22px"></span><span style="background:#fab52e;width:22px;height:22px"></span>
-          <span style="background:#f56b66;width:22px;height:22px"></span><span style="background:#8f73e8;width:22px;height:22px"></span>
-        </div>Quilts
-      </div>
-      <div class="gcard" style="background:#d9f5e8">
-        <div class="mini g3">
-          <span style="background:#f56b66"></span><span style="background:#fff"></span><span style="background:#4c9ef2"></span>
-          <span style="background:#fff"></span><span style="background:#fab52e"></span><span style="background:#fff"></span>
-          <span style="background:#2ec28e"></span><span style="background:#fff"></span><span style="background:#8f73e8"></span>
-        </div>Peeks
-      </div>
-      <div class="gcard" style="background:#cfe2ff">
-        <div class="mini g3">
-          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
-          <span style="background:#4c9ef2"></span><span style="background:#4c9ef2"></span><span style="background:#4c9ef2"></span>
-          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
-        </div>Pipes
-      </div>
-      <div class="gcard" style="background:#e4f0c9">
-        <div class="mini g3">
-          <span style="background:#7cb342"></span><span style="background:#7cb342"></span><span style="background:#fff"></span>
-          <span style="background:#fff"></span><span style="background:#7cb342"></span><span style="background:#fff"></span>
-          <span style="background:#7cb342"></span><span style="background:#7cb342"></span><span style="background:#7cb342"></span>
-        </div>Slink
-      </div>
-      <div class="gcard" style="background:#fde6c6">
-        <div class="mini g3">
-          <span style="background:#fab52e"></span><span style="background:#fff"></span><span style="background:#f0972a"></span>
-          <span style="background:#fff"></span><span style="background:#f0972a"></span><span style="background:#fff"></span>
-          <span style="background:#f0972a"></span><span style="background:#fab52e"></span><span style="background:#f0972a"></span>
-        </div>Towers
-      </div>
+      <div class="gcard"><img src="/icons/sudoku.png" alt="Sudoku" loading="lazy">Sudoku</div>
+      <div class="gcard"><img src="/icons/nonogram.png" alt="Nonograms" loading="lazy">Nonograms</div>
+      <div class="gcard"><img src="/icons/duets.png" alt="Duets" loading="lazy">Duets</div>
+      <div class="gcard"><img src="/icons/stars.png" alt="Stars" loading="lazy">Stars</div>
+      <div class="gcard"><img src="/icons/bridges.png" alt="Bridges" loading="lazy">Bridges</div>
+      <div class="gcard"><img src="/icons/quilts.png" alt="Quilts" loading="lazy">Quilts</div>
+      <div class="gcard"><img src="/icons/peeks.png" alt="Peeks" loading="lazy">Peeks</div>
+      <div class="gcard"><img src="/icons/pipes.png" alt="Pipes" loading="lazy">Pipes</div>
+      <div class="gcard"><img src="/icons/slink.png" alt="Slink" loading="lazy">Slink</div>
+      <div class="gcard"><img src="/icons/towers.png" alt="Towers" loading="lazy">Towers</div>
     </div>
   </div>
 </section>
