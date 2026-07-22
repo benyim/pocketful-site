@@ -4,56 +4,319 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pocketful: Daily Puzzles</title>
-<meta name="description" content="A pocketful of calm logic puzzles: sudoku, nonograms, and more. New daily challenges every day.">
+<meta name="description" content="A pocketful of calm logic puzzles: Sudoku, Nonograms, and a whole shelf of beautiful logic games. New daily challenges every day.">
+<meta property="og:title" content="Pocketful: Daily Puzzles">
+<meta property="og:description" content="A pocketful of calm logic puzzles. New daily challenges every day.">
+<meta property="og:image" content="https://playpocketful.com/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-  :root { color-scheme: light dark; }
-  * { margin: 0; box-sizing: border-box; }
+  :root {
+    --ink: #21212f;
+    --ink-soft: rgba(33, 33, 47, 0.55);
+    --accent: #1a8aff;
+    --page: #ffffff;
+    --blue-tile: #4c9ef2;
+    --mint-tile: #2ec28e;
+    --coral-tile: #f56b66;
+    --gold-tile: #fab52e;
+    --purple-tile: #8f73e8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
-    min-height: 100svh; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center;
-    padding: 40px 24px; background: #fbfbfd; color: #21212f;
+    font-family: "SF Pro Rounded", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--page);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
   }
-  @media (prefers-color-scheme: dark) {
-    body { background: #1c1c22; color: #e8e8ee; }
-    a.button { background: #0084ff; }
-    footer a { color: #9a9aa8; }
+  h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- Header ---- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    background: rgba(255,255,255,0.72);
+    border-bottom: 1px solid rgba(33,33,47,0.06);
   }
-  .tiles { display: flex; gap: 10px; margin-bottom: 28px; }
+  .nav { display: flex; align-items: center; gap: 12px; height: 64px; }
+  .nav img { width: 34px; height: 34px; border-radius: 9px; }
+  .nav .name { font-weight: 800; font-size: 1.15rem; }
+  .nav .spacer { flex: 1; }
+  .badge-btn {
+    background: var(--ink); color: #fff; font-weight: 700; font-size: 0.9rem;
+    padding: 9px 18px; border-radius: 999px; text-decoration: none;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .badge-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+
+  /* ---- Tile motif ---- */
+  .tiles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
   .tile {
-    width: 44px; height: 44px; border-radius: 13px;
+    position: absolute; border-radius: 22%;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 20px; color: #fff;
-    transform: rotate(var(--r));
+    color: #fff; font-weight: 800;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
   }
-  h1 { font-size: 2.4em; font-weight: 800; letter-spacing: -0.02em; }
-  .tag { margin-top: 10px; font-size: 1.1em; opacity: 0.6; max-width: 26em; }
-  .soon {
-    margin-top: 30px; font-weight: 600; font-size: 0.95em;
-    padding: 10px 22px; border-radius: 999px;
-    background: rgba(0, 132, 255, 0.12); color: #0084ff;
+
+  /* ---- Hero ---- */
+  .hero { position: relative; text-align: center; padding: 88px 0 40px; overflow: hidden; }
+  .hero-inner { position: relative; z-index: 2; }
+  .hero h1 { font-size: clamp(2.8rem, 8vw, 5rem); }
+  .hero .lede {
+    font-size: clamp(1.1rem, 3.4vw, 1.5rem); color: var(--ink-soft);
+    max-width: 30ch; margin: 18px auto 0; font-weight: 600;
   }
-  footer { margin-top: 56px; font-size: 0.85em; }
-  footer a { color: #6b6b78; margin: 0 10px; text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
+  .cta-row { margin-top: 34px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta {
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 1.02rem;
+    padding: 15px 30px; border-radius: 16px; text-decoration: none;
+    box-shadow: 0 10px 24px rgba(26,138,255,0.32);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(26,138,255,0.4); }
+
+  .hero-shot { margin-top: 54px; display: flex; justify-content: center; position: relative; z-index: 2; }
+  .hero-shot img {
+    width: min(300px, 74vw); border-radius: 42px;
+    box-shadow: 0 40px 80px rgba(33,33,47,0.22), 0 8px 20px rgba(33,33,47,0.10);
+  }
+
+  /* ---- Game shelf ---- */
+  .shelf { padding: 68px 0 40px; text-align: center; }
+  .shelf h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+  .shelf p { color: var(--ink-soft); font-weight: 600; margin-top: 10px; font-size: 1.05rem; }
+  .cards {
+    margin-top: 40px; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+  .gcard {
+    border-radius: 22px; padding: 22px 16px; text-align: center;
+    font-weight: 800; font-size: 1.05rem;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    aspect-ratio: 1 / 0.92; justify-content: center;
+    transition: transform 0.18s ease;
+  }
+  .gcard:hover { transform: translateY(-4px); }
+  .gcard .mini { display: grid; gap: 4px; }
+  .gcard .mini.g3 { grid-template-columns: repeat(3, 1fr); }
+  .gcard .mini.g2 { grid-template-columns: repeat(2, 1fr); }
+  .gcard .mini span { width: 17px; height: 17px; border-radius: 5px; }
+
+  /* ---- Feature rows ---- */
+  .feature { padding: 76px 0; }
+  .feature .row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    max-width: 980px; margin: 0 auto;
+  }
+  .feature.rev .row { direction: rtl; }
+  .feature.rev .row > * { direction: ltr; }
+  .feature .copy h2 { font-size: clamp(1.9rem, 5vw, 2.9rem); }
+  .feature .copy p { color: var(--ink-soft); font-weight: 600; font-size: 1.15rem; margin-top: 14px; max-width: 24ch; }
+  .feature .shot { display: flex; justify-content: center; }
+  .feature .shot img {
+    width: min(280px, 70vw); border-radius: 40px;
+    box-shadow: 0 34px 70px rgba(33,33,47,0.20), 0 6px 16px rgba(33,33,47,0.10);
+  }
+  .kicker { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+
+  /* ---- Premium ---- */
+  .premium { text-align: center; padding: 40px 0 76px; }
+  .premium .box {
+    max-width: 620px; margin: 0 auto; padding: 44px 32px;
+    background: linear-gradient(160deg, #fff8e8, #fff);
+    border: 1px solid rgba(250,181,46,0.3);
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(33,33,47,0.08);
+  }
+  .premium h2 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); }
+  .premium ul { list-style: none; margin: 22px 0 0; display: inline-flex; flex-direction: column; gap: 12px; text-align: left; }
+  .premium li { font-weight: 700; font-size: 1.08rem; display: flex; align-items: center; gap: 12px; }
+  .premium li .dot { width: 22px; height: 22px; border-radius: 7px; background: var(--gold-tile);
+    display: flex; align-items: center; justify-content: center; color:#fff; font-size: 0.8rem; flex: none; }
+
+  /* ---- Footer ---- */
+  footer { border-top: 1px solid rgba(33,33,47,0.07); padding: 44px 0; text-align: center; }
+  footer .flinks { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  footer a { color: var(--ink-soft); text-decoration: none; font-weight: 600; }
+  footer a:hover { color: var(--accent); }
+  footer .fine { color: var(--ink-soft); font-size: 0.85rem; }
+  footer .fname { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--ink); margin-bottom: 14px; }
+  footer .fname img { width: 26px; height: 26px; border-radius: 7px; }
+
+  @media (max-width: 720px) {
+    .feature .row, .feature.rev .row { grid-template-columns: 1fr; direction: ltr; gap: 28px; text-align: center; }
+    .feature .copy p { margin-left: auto; margin-right: auto; }
+    .feature.rev .shot { order: -1; }
+    .feature { padding: 52px 0; }
+  }
 </style>
 </head>
 <body>
-  <div class="tiles" aria-hidden="true">
-    <div class="tile" style="background:#42a0f2; --r:-6deg">7</div>
-    <div class="tile" style="background:#f2b134; --r:4deg">3</div>
-    <div class="tile" style="background:#2ec28e; --r:-3deg">★</div>
-    <div class="tile" style="background:#9e73eb; --r:7deg">1</div>
+
+<header>
+  <div class="wrap nav">
+    <img src="/apple-touch-icon.png" alt="Pocketful icon">
+    <span class="name">Pocketful</span>
+    <span class="spacer"></span>
+    <a class="badge-btn" href="#get">Coming soon</a>
   </div>
-  <h1>Pocketful</h1>
-  <p class="tag">A pocketful of calm logic puzzles: sudoku, nonograms, and friends.
-  New daily challenges every day.</p>
-  <p class="soon">Coming soon to the App Store</p>
-  <footer>
-    <a href="/privacy/">Privacy Policy</a>
-    <a href="mailto:benjaminyimm@gmail.com">Contact</a>
-  </footer>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="tiles" aria-hidden="true">
+    <div class="tile" style="left:6%;  top:14%; width:52px; height:52px; background:var(--blue-tile); transform:rotate(-13deg); font-size:22px;">7</div>
+    <div class="tile" style="left:88%; top:10%; width:40px; height:40px; background:var(--mint-tile); transform:rotate(8deg);">★</div>
+    <div class="tile" style="left:11%; top:60%; width:44px; height:44px; background:var(--coral-tile); transform:rotate(15deg); font-size:19px;">1</div>
+    <div class="tile" style="left:84%; top:54%; width:56px; height:56px; background:var(--gold-tile); transform:rotate(-9deg); font-size:24px;">3</div>
+    <div class="tile" style="left:79%; top:82%; width:38px; height:38px; background:var(--purple-tile); transform:rotate(12deg);">✦</div>
+    <div class="tile" style="left:15%; top:85%; width:34px; height:34px; background:var(--purple-tile); transform:rotate(-7deg);"></div>
+  </div>
+  <div class="wrap hero-inner">
+    <h1>A pocketful of<br>calm puzzles.</h1>
+    <p class="lede">Sudoku, Nonograms, and a whole shelf of beautiful logic games. Fresh daily challenges, every day.</p>
+    <div class="cta-row" id="get">
+      <a class="cta" href="#">Coming soon to the App Store</a>
+    </div>
+  </div>
+  <div class="hero-shot">
+    <img src="/shots/home.png" alt="The Pocketful home screen with a shelf of puzzle games" loading="lazy">
+  </div>
+</section>
+
+<!-- GAME SHELF -->
+<section class="shelf">
+  <div class="wrap">
+    <h2>Ten games, one calm app.</h2>
+    <p>The classics you love and clever new favorites, with more on the way.</p>
+    <div class="cards">
+      <div class="gcard" style="background:#d4e8ff">
+        <div class="mini g3">
+          <span style="background:#4c9ef2"></span><span style="background:#fff"></span><span style="background:#4c9ef2"></span>
+          <span style="background:#4c9ef2"></span><span style="background:#21212f"></span><span style="background:#fff"></span>
+          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
+        </div>Sudoku
+      </div>
+      <div class="gcard" style="background:#e0e2ee">
+        <div class="mini g3">
+          <span style="background:#21212f"></span><span style="background:#fff"></span><span style="background:#21212f"></span>
+          <span style="background:#fff"></span><span style="background:#21212f"></span><span style="background:#fff"></span>
+          <span style="background:#21212f"></span><span style="background:#fff"></span><span style="background:#21212f"></span>
+        </div>Nonograms
+      </div>
+      <div class="gcard" style="background:#fdf0cf">
+        <div class="mini g3">
+          <span style="background:#4c9ef2"></span><span style="background:#fab52e"></span><span style="background:#4c9ef2"></span>
+          <span style="background:#fab52e"></span><span style="background:#4c9ef2"></span><span style="background:#fab52e"></span>
+          <span style="background:#4c9ef2"></span><span style="background:#fff"></span><span style="background:#fab52e"></span>
+        </div>Duets
+      </div>
+      <div class="gcard" style="background:#fde2da">
+        <div class="mini g2">
+          <span style="background:#2ec28e;width:22px;height:22px"></span><span style="background:#8f73e8;width:22px;height:22px"></span>
+          <span style="background:#f56b66;width:22px;height:22px"></span><span style="background:#fab52e;width:22px;height:22px"></span>
+        </div>Stars
+      </div>
+      <div class="gcard" style="background:#d3f1f6">
+        <div class="mini g2">
+          <span style="background:#2ba7c9;width:22px;height:22px;border-radius:50%"></span><span style="background:#fff;width:22px;height:22px;border-radius:50%"></span>
+          <span style="background:#fff;width:22px;height:22px;border-radius:50%"></span><span style="background:#2ba7c9;width:22px;height:22px;border-radius:50%"></span>
+        </div>Bridges
+      </div>
+      <div class="gcard" style="background:#e9e0fb">
+        <div class="mini g2">
+          <span style="background:#4c9ef2;width:22px;height:22px"></span><span style="background:#fab52e;width:22px;height:22px"></span>
+          <span style="background:#f56b66;width:22px;height:22px"></span><span style="background:#8f73e8;width:22px;height:22px"></span>
+        </div>Quilts
+      </div>
+      <div class="gcard" style="background:#d9f5e8">
+        <div class="mini g3">
+          <span style="background:#f56b66"></span><span style="background:#fff"></span><span style="background:#4c9ef2"></span>
+          <span style="background:#fff"></span><span style="background:#fab52e"></span><span style="background:#fff"></span>
+          <span style="background:#2ec28e"></span><span style="background:#fff"></span><span style="background:#8f73e8"></span>
+        </div>Peeks
+      </div>
+      <div class="gcard" style="background:#cfe2ff">
+        <div class="mini g3">
+          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
+          <span style="background:#4c9ef2"></span><span style="background:#4c9ef2"></span><span style="background:#4c9ef2"></span>
+          <span style="background:#fff"></span><span style="background:#4c9ef2"></span><span style="background:#fff"></span>
+        </div>Pipes
+      </div>
+      <div class="gcard" style="background:#e4f0c9">
+        <div class="mini g3">
+          <span style="background:#7cb342"></span><span style="background:#7cb342"></span><span style="background:#fff"></span>
+          <span style="background:#fff"></span><span style="background:#7cb342"></span><span style="background:#fff"></span>
+          <span style="background:#7cb342"></span><span style="background:#7cb342"></span><span style="background:#7cb342"></span>
+        </div>Slink
+      </div>
+      <div class="gcard" style="background:#fde6c6">
+        <div class="mini g3">
+          <span style="background:#fab52e"></span><span style="background:#fff"></span><span style="background:#f0972a"></span>
+          <span style="background:#fff"></span><span style="background:#f0972a"></span><span style="background:#fff"></span>
+          <span style="background:#f0972a"></span><span style="background:#fab52e"></span><span style="background:#f0972a"></span>
+        </div>Towers
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: daily -->
+<section class="feature">
+  <div class="wrap row">
+    <div class="copy">
+      <div class="kicker">Daily Challenges</div>
+      <h2>Never miss a day.</h2>
+      <p>Fresh puzzles in every game, every day. Build a streak and keep the flame burning.</p>
+    </div>
+    <div class="shot"><img src="/shots/daily.png" alt="The daily challenges calendar with a streak" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- FEATURE: celebrate -->
+<section class="feature rev" style="background:#eef4ff;">
+  <div class="wrap row">
+    <div class="copy">
+      <div class="kicker">Every Solve</div>
+      <h2>Made to feel good.</h2>
+      <p>Soft colors, satisfying finishes, and gentle motion. No lives, no timers, no pressure.</p>
+    </div>
+    <div class="shot"><img src="/shots/celebration.png" alt="A completed sudoku celebration screen" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section class="premium">
+  <div class="wrap">
+    <div class="box">
+      <h2>Pocketful Premium</h2>
+      <ul>
+        <li><span class="dot">&check;</span> No ads, ever</li>
+        <li><span class="dot">&check;</span> Unlimited hints</li>
+        <li><span class="dot">&check;</span> Replay any past daily challenge</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="fname"><img src="/apple-touch-icon.png" alt="">Pocketful</div>
+    <div class="flinks">
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="mailto:support@playpocketful.com">support@playpocketful.com</a>
+    </div>
+    <div class="fine">© 2026 Ben Yim. Made with care for people who like a good puzzle.</div>
+  </div>
+</footer>
+
 </body>
 </html>
