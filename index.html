@@ -47,12 +47,16 @@
   .nav img { width: 34px; height: 34px; border-radius: 9px; }
   .nav .name { font-weight: 800; font-size: 1.15rem; }
   .nav .spacer { flex: 1; }
+  /* Chunky press button: a solid darker rim under the face (never a blurred
+     shadow), and the face drops onto it when pressed — the app's card style. */
   .badge-btn {
     background: var(--ink); color: #fff; font-weight: 700; font-size: 0.9rem;
     padding: 9px 18px; border-radius: 999px; text-decoration: none;
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    box-shadow: 0 4px 0 #0b0b14;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .badge-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+  .badge-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #0b0b14; }
+  .badge-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0b0b14; }
 
   /* ---- Tile motif ---- */
   .tiles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -60,7 +64,7 @@
     position: absolute; border-radius: 22%;
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-weight: 800;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    box-shadow: 0 5px 0 rgba(0,0,0,0.18);
   }
 
   /* ---- Hero ---- */
@@ -75,10 +79,11 @@
   .cta {
     background: var(--accent); color: #fff; font-weight: 700; font-size: 1.02rem;
     padding: 15px 30px; border-radius: 16px; text-decoration: none;
-    box-shadow: 0 10px 24px rgba(26,138,255,0.32);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 6px 0 #0e6cd0;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .cta:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(26,138,255,0.4); }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #0e6cd0; }
+  .cta:active { transform: translateY(6px); box-shadow: 0 0 0 #0e6cd0; }
 
   .hero-shot { margin-top: 54px; display: flex; justify-content: center; position: relative; z-index: 2; }
   .hero-shot img {
@@ -97,14 +102,19 @@
   }
   .gcard {
     text-align: center; font-weight: 800; font-size: 1.02rem;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
     transition: transform 0.18s ease;
   }
   .gcard:hover { transform: translateY(-5px); }
+  /* Each chip sits on its own deepened rim (--rim, set per game), like the
+     app's 3D cards; pressing drops the face onto the rim. */
   .gcard img {
     width: 100%; max-width: 132px; aspect-ratio: 1; border-radius: 26px;
-    box-shadow: 0 10px 24px rgba(33,33,47,0.12);
+    box-shadow: 0 7px 0 var(--rim, rgba(33,33,47,0.16));
+    border: 1.5px solid rgba(33,33,47,0.05);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
+  .gcard:active img { transform: translateY(7px); box-shadow: 0 0 0 var(--rim, rgba(33,33,47,0.16)); }
 
   /* ---- Feature rows ---- */
   .feature { padding: 76px 0; }
@@ -129,9 +139,9 @@
   .premium .box {
     max-width: 620px; margin: 0 auto; padding: 44px 32px;
     background: linear-gradient(160deg, #fff8e8, #fff);
-    border: 1px solid rgba(250,181,46,0.3);
+    border: 1.5px solid rgba(250,181,46,0.35);
     border-radius: 28px;
-    box-shadow: 0 20px 50px rgba(33,33,47,0.08);
+    box-shadow: 0 8px 0 #f2dfae;
   }
   .premium h2 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); }
   .premium ul { list-style: none; margin: 22px 0 0; display: inline-flex; flex-direction: column; gap: 12px; text-align: left; }
@@ -153,6 +163,13 @@
     .feature .copy p { margin-left: auto; margin-right: auto; }
     .feature.rev .shot { order: -1; }
     .feature { padding: 52px 0; }
+  }
+  /* Small phones: let the display type shrink further so nothing crowds the
+     right edge at 375-390pt widths. */
+  @media (max-width: 430px) {
+    .hero h1 { font-size: clamp(2.1rem, 10.5vw, 2.8rem); }
+    .shelf h2, .feature .copy h2, .premium h2 { font-size: clamp(1.45rem, 6.6vw, 2rem); }
+    .hero .lede { font-size: clamp(1rem, 4.4vw, 1.3rem); }
   }
 </style>
 </head>
@@ -192,19 +209,19 @@
 <!-- GAME SHELF -->
 <section class="shelf">
   <div class="wrap">
-    <h2>Ten games, one calm app.</h2>
+    <h2>So many games, one calm app.</h2>
     <p>The classics you love and clever new favorites, with more on the way.</p>
     <div class="cards">
-      <div class="gcard"><img src="/icons/sudoku.png" alt="Sudoku" loading="lazy">Sudoku</div>
-      <div class="gcard"><img src="/icons/nonogram.png" alt="Nonograms" loading="lazy">Nonograms</div>
-      <div class="gcard"><img src="/icons/duets.png" alt="Duets" loading="lazy">Duets</div>
-      <div class="gcard"><img src="/icons/stars.png" alt="Stars" loading="lazy">Stars</div>
-      <div class="gcard"><img src="/icons/bridges.png" alt="Bridges" loading="lazy">Bridges</div>
-      <div class="gcard"><img src="/icons/quilts.png" alt="Quilts" loading="lazy">Quilts</div>
-      <div class="gcard"><img src="/icons/peeks.png" alt="Peeks" loading="lazy">Peeks</div>
-      <div class="gcard"><img src="/icons/pipes.png" alt="Pipes" loading="lazy">Pipes</div>
-      <div class="gcard"><img src="/icons/slink.png" alt="Slink" loading="lazy">Slink</div>
-      <div class="gcard"><img src="/icons/towers.png" alt="Towers" loading="lazy">Towers</div>
+      <div class="gcard" style="--rim:#a8cdf3"><img src="/icons/sudoku.png" alt="Sudoku" loading="lazy">Sudoku</div>
+      <div class="gcard" style="--rim:#b9c4de"><img src="/icons/nonogram.png" alt="Nonograms" loading="lazy">Nonograms</div>
+      <div class="gcard" style="--rim:#f2d795"><img src="/icons/duets.png" alt="Duets" loading="lazy">Duets</div>
+      <div class="gcard" style="--rim:#f4bfae"><img src="/icons/stars.png" alt="Stars" loading="lazy">Stars</div>
+      <div class="gcard" style="--rim:#93dcee"><img src="/icons/bridges.png" alt="Bridges" loading="lazy">Bridges</div>
+      <div class="gcard" style="--rim:#c9b4ef"><img src="/icons/quilts.png" alt="Quilts" loading="lazy">Quilts</div>
+      <div class="gcard" style="--rim:#a3e0c3"><img src="/icons/peeks.png" alt="Peeks" loading="lazy">Peeks</div>
+      <div class="gcard" style="--rim:#8fc3f5"><img src="/icons/pipes.png" alt="Pipes" loading="lazy">Pipes</div>
+      <div class="gcard" style="--rim:#bade87"><img src="/icons/slink.png" alt="Slink" loading="lazy">Slink</div>
+      <div class="gcard" style="--rim:#f2c583"><img src="/icons/towers.png" alt="Towers" loading="lazy">Towers</div>
     </div>
   </div>
 </section>
