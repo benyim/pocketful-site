@@ -138,37 +138,6 @@
   .kicker { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
 
-  /* ---- Twist chips ---- */
-  /* Each daily twist as a little name tag, the same shape the app puts on a
-     twist card: the twist name owning the line, the classic game in tiny
-     caps underneath. The copy column runs wider here so they can wrap into
-     a block instead of a single stringy column. */
-  .twists .copy p { max-width: 30ch; }
-  .twistchips {
-    list-style: none; margin: 22px 0 0;
-    display: flex; flex-wrap: wrap; gap: 10px; max-width: 38ch;
-  }
-  .twistchips li {
-    display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15;
-    background: #fff; border: 1.5px solid rgba(33,33,47,0.07);
-    border-radius: 14px; padding: 8px 13px 9px;
-    box-shadow: 0 4px 0 rgba(33,33,47,0.10);
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
-  }
-  .twistchips li:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(33,33,47,0.10); }
-  .twistchips b { font-weight: 800; font-size: 0.98rem; }
-  .twistchips span {
-    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.09em;
-    text-transform: uppercase; color: var(--ink-soft); margin-top: 3px;
-  }
-  /* The tail chip keeps the roster uncountable — there are always more. */
-  .twistchips .more {
-    justify-content: center; background: none; border-style: dashed;
-    box-shadow: none; color: var(--ink-soft); font-weight: 700; font-size: 0.9rem;
-  }
-  .twistchips .more:hover { transform: none; box-shadow: none; }
-  .streakline { margin-top: 22px; }
-
   /* ---- Premium ---- */
   .premium { text-align: center; padding: 40px 0 76px; }
   .premium .box {
@@ -198,10 +167,6 @@
     .feature .copy p { margin-left: auto; margin-right: auto; }
     .feature.rev .shot { order: -1; }
     .feature { padding: 52px 0; }
-    /* The stacked layout centers its copy, so the chips centre with it. */
-    .twistchips { justify-content: center; margin-left: auto; margin-right: auto; }
-    .twistchips li { align-items: center; }
-    .twists .copy p { margin-left: auto; margin-right: auto; }
   }
   /* Small phones: let the display type shrink further so nothing crowds the
      right edge at 375-390pt widths. */
@@ -269,27 +234,14 @@
 </section>
 
 <!-- FEATURE: daily -->
-<section class="feature twists">
+<section class="feature">
   <div class="wrap row">
     <div class="copy">
       <div class="kicker">Daily Challenges</div>
-      <h2>Every day,<br>the rules change.</h2>
-      <p>Every game's daily is a twist on the game you know — one real rule bent, and a brand new one tomorrow.</p>
-      <ul class="twistchips">
-        <li><b>Thermo</b><span>Sudoku</span></li>
-        <li><b>Fog</b><span>Nonograms</span></li>
-        <li><b>Trio</b><span>Duets</span></li>
-        <li><b>Twins</b><span>Stars</span></li>
-        <li><b>Overpass</b><span>Bridges</span></li>
-        <li><b>Bolts</b><span>Quilts</span></li>
-        <li><b>Portals</b><span>Slink</span></li>
-        <li><b>Gearworks</b><span>Pipes</span></li>
-        <li><b>Glass</b><span>Towers</span></li>
-        <li class="more">and more…</li>
-      </ul>
-      <p class="streakline">Sudoku sprouts thermometers. Nonograms fog over. Stars come in pairs. Solve just one and your streak lives another day.</p>
+      <h2>Never miss a day.</h2>
+      <p>Fresh puzzles in every game, every day. Build a streak and keep the flame burning.</p>
     </div>
-    <div class="shot"><img src="/shots/daily.png?v=5" alt="The daily challenges screen: a 15-day streak and today's twisted puzzles — Thermo, Fog, Trio and Twins" loading="lazy"></div>
+    <div class="shot"><img src="/shots/daily.png?v=3" alt="The daily challenges calendar with a streak" loading="lazy"></div>
   </div>
 </section>
 
