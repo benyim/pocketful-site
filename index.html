@@ -49,15 +49,18 @@
   .nav .name { font-weight: 800; font-size: 1.15rem; }
   .nav .spacer { flex: 1; }
   /* Chunky press button: a solid darker rim under the face (never a blurred
-     shadow), and the face drops onto it when pressed — the app's card style. */
+     shadow), and the face drops onto it when pressed — the app's card style.
+     Same blue soft-cornered slab as the hero CTA, just smaller. nowrap keeps
+     it from folding to two lines (and warping) in a narrow header. */
   .badge-btn {
-    background: var(--ink); color: #fff; font-weight: 700; font-size: 0.9rem;
-    padding: 9px 18px; border-radius: 999px; text-decoration: none;
-    box-shadow: 0 4px 0 #0b0b14;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 0.9rem;
+    padding: 10px 18px; border-radius: 13px; text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 0 #0e6cd0;
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .badge-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #0b0b14; }
-  .badge-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0b0b14; }
+  .badge-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #0e6cd0; }
+  .badge-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0e6cd0; }
 
   /* ---- Tile motif ---- */
   .tiles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -171,6 +174,9 @@
     .hero h1 { font-size: clamp(2.1rem, 10.5vw, 2.8rem); }
     .shelf h2, .feature .copy h2, .premium h2 { font-size: clamp(1.45rem, 6.6vw, 2rem); }
     .hero .lede { font-size: clamp(1rem, 4.4vw, 1.3rem); }
+    /* Keep the header button on one line even on a 320pt phone. */
+    .badge-btn { font-size: 0.82rem; padding: 9px 14px; }
+    .wrap { padding: 0 18px; }
   }
 </style>
 </head>
@@ -181,7 +187,7 @@
     <img src="/apple-touch-icon.png?v=4" alt="Pocketful icon">
     <span class="name">Pocketful</span>
     <span class="spacer"></span>
-    <a class="badge-btn" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">View on the App Store</a>
+    <a class="badge-btn" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get on App Store</a>
   </div>
 </header>
 
