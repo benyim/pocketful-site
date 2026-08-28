@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocketful: Daily Puzzles</title>
+<meta name="description" content="A pocketful of calm logic puzzles: Sudoku, Nonograms, and a whole shelf of beautiful logic games. New daily challenges every day.">
+<meta property="og:title" content="Pocketful: Daily Puzzles">
+<meta property="og:description" content="A pocketful of calm logic puzzles. New daily challenges every day.">
+<meta property="og:image" content="https://playpocketful.com/apple-touch-icon.png?v=6">
+<meta name="apple-itunes-app" content="app-id=6792436106">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png?v=6">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6">
+<style>
+  /* Palette lifted from the app's Theme.swift (the current CLASSIC look):
+     accent 0/0.52/1.0, cardInk 0.13/0.13/0.22, accentPastel 0.64/0.81/0.99,
+     sunshine and the daily pending wash. Every coloured surface in the app
+     is a pastel carrying dark ink; the solid colour slabs live only in the
+     small floating tiles. */
+  :root {
+    --ink: #212138;
+    --ink-soft: rgba(33, 33, 56, 0.55);
+    --accent: #0085ff;
+    --accent-pastel: #a3cffc;
+    --sun-pastel: #ffe6ad;
+    --page: #ffffff;
+    --blue-tile: #4c9ef2;
+    --mint-tile: #2ec28e;
+    --coral-tile: #f56b66;
+    --gold-tile: #fab52e;
+    --purple-tile: #8f73e8;
+    /* The app's flat look: soft blurred shadows, never solid rims.
+       boardSurface = black 6% r7 y3; BigButtonStyle = black 18% r8 y4. */
+    --card-shadow: 0 3px 7px rgba(0, 0, 0, 0.06);
+    --btn-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+    --hairline: rgba(33, 33, 56, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    /* The app's one typeface is SF Pro at COMPRESSED width (TypeStyle,
+       2026-08-10): bold and editorial, deliberately not rounded and never
+       a serif. font-stretch picks the narrow cuts of the system font in
+       Safari; elsewhere it falls back to the normal width harmlessly. */
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    font-stretch: extra-condensed;
+    color: var(--ink);
+    background: var(--page);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  /* Compressed sets the same point size visually smaller, so display type
+     takes the app's own cure: heavier and a step larger (displayLift). */
+  h1, h2, h3 { font-weight: 900; letter-spacing: -0.01em; line-height: 1.06; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- Header ---- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    background: rgba(255,255,255,0.72);
+    border-bottom: 1px solid rgba(33,33,56,0.06);
+  }
+  .nav { display: flex; align-items: center; gap: 12px; height: 64px; }
+  .nav img { width: 34px; height: 34px; border-radius: 9px; }
+  .nav .name { font-weight: 800; font-size: 1.15rem; }
+  .nav .spacer { flex: 1; }
+  /* The app's BigButtonStyle, small: pale accent pastel carrying dark ink,
+     a soft neutral shadow, and a gentle press-scale. (The old solid-rim
+     "chunky press" went with duoLook; the app ships flat now.) nowrap keeps
+     it from folding to two lines in a narrow header. */
+  .badge-btn {
+    background: var(--accent-pastel); color: var(--ink); font-weight: 800; font-size: 0.9rem;
+    padding: 10px 18px; border-radius: 13px; text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--btn-shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .badge-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,0.18); }
+  .badge-btn:active { transform: scale(0.97); box-shadow: 0 2px 5px rgba(0,0,0,0.16); }
+
+  /* ---- Tile motif ---- */
+  .tiles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .tile {
+    position: absolute; border-radius: 22%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800;
+    box-shadow: 0 4px 9px rgba(0,0,0,0.16);
+  }
+
+  /* ---- Hero ---- */
+  .hero { position: relative; text-align: center; padding: 88px 0 40px; overflow: hidden; }
+  .hero-inner { position: relative; z-index: 2; }
+  .hero h1 { font-size: clamp(2.8rem, 8vw, 5rem); }
+  .hero .lede {
+    font-size: clamp(1.1rem, 3.4vw, 1.5rem); color: rgba(33, 33, 56, 0.8);
+    max-width: 30ch; margin: 18px auto 0; font-weight: 600;
+  }
+  .cta-row { margin-top: 34px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  /* BigButtonStyle: pale accent, dark ink, radius 16, black-18% shadow,
+     press scales to 0.97: the app's one CTA shape since 2026-08-10. */
+  .cta {
+    background: var(--accent-pastel); color: var(--ink); font-weight: 800; font-size: 1.05rem;
+    padding: 15px 30px; border-radius: 16px; text-decoration: none;
+    box-shadow: var(--btn-shadow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.18); }
+  .cta:active { transform: scale(0.97); box-shadow: 0 2px 5px rgba(0,0,0,0.16); }
+
+  .hero-shot { margin-top: 54px; display: flex; justify-content: center; position: relative; z-index: 2; }
+  .hero-shot img {
+    width: min(300px, 74vw); border-radius: 42px;
+    box-shadow: 0 40px 80px rgba(33,33,56,0.22), 0 8px 20px rgba(33,33,56,0.10);
+  }
+
+  /* ---- Game shelf ---- */
+  .shelf { padding: 68px 0 40px; text-align: center; }
+  .shelf h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+  .shelf p { color: var(--ink-soft); font-weight: 600; margin-top: 10px; font-size: 1.05rem; }
+  .tapme { font-weight: 700; color: var(--accent); }
+  .cards {
+    margin-top: 40px; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    position: relative;   /* the popover positions against this grid */
+  }
+  .gcard {
+    text-align: center; font-weight: 800; font-size: 1.02rem;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    transition: transform 0.18s ease;
+    /* button reset: these were divs until they learned to open the rules */
+    background: none; border: 0; padding: 0; margin: 0;
+    font-family: inherit; color: inherit; cursor: pointer;
+  }
+  .gcard:hover { transform: translateY(-5px); }
+  .gcard:focus-visible { outline: 3px solid var(--accent); outline-offset: 6px; border-radius: 28px; }
+  /* Lives in the markup for search engines and for no-JS readers; on screen
+     it's the popover's job. */
+  .grules { display: none; }
+
+  /* ---- Rules popover ---- */
+  /* Anchored under (or over) the tapped card with a little arrow aimed at
+     it, so it reads as belonging to that game rather than to the page. */
+  /* --tint is the wash that game's own board sits on in the app, sampled
+     from the screenshot and copied off the card on open, so the popover
+     arrives in the colour of the game you tapped. */
+  .gpop {
+    position: absolute; z-index: 30; width: 320px; max-width: 100%;
+    background: var(--tint, #fff); border: 1px solid var(--hairline);
+    border-radius: 22px; padding: 18px 18px 20px;
+    box-shadow: 0 18px 40px rgba(33,33,56,0.18);
+    text-align: left;
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+  .gpop.open { opacity: 1; transform: translateY(0); }
+  /* Padded equally on both sides so the close button can't pull the
+     centred title off-centre. */
+  .gpop h3 { font-size: 1.25rem; text-align: center; padding: 0 30px; }
+  /* Capped both ways: Peeks' board is portrait and would otherwise make the
+     popover twice the height of everyone else's. */
+  /* No border: the board's own wash and the card's are the same colour, so
+     the puzzle floats free instead of sitting in a box. */
+  .gpop-board {
+    display: block; width: auto; height: auto;
+    max-width: 240px; max-height: 290px; margin: 12px auto 0;
+  }
+  .gpop-rules {
+    margin-top: 14px; font-size: 0.96rem; font-weight: 600;
+    line-height: 1.45; color: var(--ink-soft);
+  }
+  .gpop-close {
+    position: absolute; top: 12px; right: 12px; width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(33,33,56,0.06); border: 0; border-radius: 50%;
+    color: var(--ink); font-size: 1.15rem; line-height: 1; cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .gpop-close:hover { background: rgba(33,33,56,0.12); }
+  /* The pointer: a rotated square tucked half under the card's edge. */
+  .gpop-arrow {
+    position: absolute; width: 16px; height: 16px; background: var(--tint, #fff);
+    border-left: 1px solid var(--hairline);
+    border-top: 1px solid var(--hairline);
+    transform: rotate(45deg); top: -9px;
+  }
+  .gpop.above .gpop-arrow { top: auto; bottom: -9px; transform: rotate(225deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .gpop { transition: none; }
+  }
+  /* The shelf card, flat like the app's: the pastel face with a hairline
+     edge and a soft shadow. The 3D rim went with duoLook; nothing in the
+     app carries solid depth any more. --rim stays in the markup unused so
+     flipping the look back is one CSS change. */
+  .gchip {
+    position: relative; display: block; width: 100%; max-width: 132px;
+  }
+  .gchip img {
+    position: relative; display: block; width: 100%; aspect-ratio: 1;
+    border-radius: 26px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.15s ease;
+  }
+  /* Pressed: the app's BouncyButtonStyle dip. */
+  .gcard:active .gchip img,
+  .gcard[aria-expanded="true"] .gchip img { transform: scale(0.95); }
+
+  /* ---- Feature rows ---- */
+  .feature { padding: 76px 0; }
+  .feature .row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    max-width: 980px; margin: 0 auto;
+  }
+  .feature.rev .row { direction: rtl; }
+  .feature.rev .row > * { direction: ltr; }
+  .feature .copy h2 { font-size: clamp(1.9rem, 5vw, 2.9rem); }
+  .feature .copy p { color: var(--ink-soft); font-weight: 600; font-size: 1.15rem; margin-top: 14px; max-width: 24ch; }
+  .feature .shot { display: flex; justify-content: center; }
+  .feature .shot img {
+    width: min(280px, 70vw); border-radius: 40px;
+    box-shadow: 0 34px 70px rgba(33,33,56,0.20), 0 6px 16px rgba(33,33,56,0.10);
+  }
+  .kicker { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+
+  /* The daily section runs a wider copy column than the other feature rows:
+     it carries two paragraphs, not one. */
+  .twists .copy p { max-width: 32ch; }
+  .streakline { margin-top: 18px; }
+
+  /* ---- How it feels ---- */
+  /* The old version of this section was three adjectives next to a phone.
+     Now the shot carries the mood and the copy makes four plain promises,
+     each one a thing the app actually does for the player. */
+  .feel {
+    background: linear-gradient(180deg, #eef4ff 0%, #e7efff 60%, #f4f8ff 100%);
+    padding: 84px 0;
+  }
+  .feelrow {
+    display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px;
+    align-items: center; max-width: 1000px;
+  }
+  .feelshot { display: flex; justify-content: center; }
+  .feelshot img {
+    width: min(280px, 70vw); border-radius: 40px;
+    box-shadow: 0 34px 70px rgba(33,60,120,0.22), 0 6px 16px rgba(33,60,120,0.12);
+  }
+  .feelcopy h2 { font-size: clamp(1.8rem, 4.4vw, 2.7rem); }
+  .feelcopy > p {
+    color: var(--ink-soft); font-weight: 600; font-size: 1.12rem;
+    margin-top: 14px; max-width: 34ch;
+  }
+  /* One white card of hairline-divided rows, the same shape the premium
+     comparison uses, so the page keeps a single card language. Typography
+     carries it; icons here only ever read as clip art. */
+  .promises {
+    list-style: none; margin: 28px 0 0;
+    background: #fff; border: 1px solid rgba(33,60,120,0.08);
+    border-radius: 20px; padding: 4px 22px;
+    box-shadow: 0 10px 26px rgba(33,60,120,0.10);
+  }
+  .promises li { padding: 15px 0; }
+  .promises li + li { border-top: 1px solid rgba(33,60,120,0.10); }
+  .promises b {
+    display: block; font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em;
+  }
+  .promises span {
+    display: block; margin-top: 3px;
+    font-size: 0.93rem; font-weight: 600; line-height: 1.4; color: var(--ink-soft);
+  }
+
+  /* ---- Premium ---- */
+  /* A warm band rather than a boxed card on white: the pitch on the left,
+     the same Free-vs-Premium table the app's paywall uses on the right, so
+     the page argues the way the app does. */
+  .premium {
+    position: relative; overflow: hidden;
+    padding: 76px 0 84px;
+    background: linear-gradient(180deg, #fffaf0 0%, #fff6e4 55%, #fffdf8 100%);
+    border-top: 1px solid rgba(250,181,46,0.22);
+    border-bottom: 1px solid rgba(250,181,46,0.22);
+  }
+  .prow {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
+    max-width: 980px;
+  }
+  .pbadge {
+    display: inline-block; font-size: 0.72rem; font-weight: 800;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #7a5200; background: rgba(250,181,46,0.28);
+    padding: 6px 13px; border-radius: 999px;
+  }
+  .pcopy h2 { font-size: clamp(1.7rem, 4.2vw, 2.5rem); margin-top: 16px; }
+  .pcopy > p {
+    color: var(--ink-soft); font-weight: 600; font-size: 1.1rem;
+    margin-top: 14px; max-width: 30ch;
+  }
+  /* Premium's CTA follows the same rule as every coloured surface in the
+     app: a pastel (sunshine) carrying dark ink, never a saturated slab. */
+  .cta.gold {
+    display: inline-block; margin-top: 26px;
+    background: var(--sun-pastel); color: #4a3000;
+  }
+
+  /* The comparison card. Premium's column sits on a sunshine wash spanning
+     header and rows, which is what makes the eye read it as the richer
+     side before anyone reads a word. */
+  .pcard {
+    position: relative;
+    background: #fff; border: 1px solid var(--hairline);
+    border-radius: 24px; padding: 8px 8px 4px;
+    box-shadow: 0 16px 34px rgba(120,88,10,0.10);
+  }
+  /* The gold crown chip tipped well over, floating out to the left and
+     BEHIND the pitch, so it reads as part of the band rather than a badge
+     stuck on the card. Metallic gold like the app's PremiumMark, with a
+     soft warm shadow (flat look), and it bobs. Transform only, so it
+     costs nothing. */
+  .pcopy { position: relative; }
+  .pcopy > *:not(.crownchip) { position: relative; z-index: 1; }
+  .crownchip {
+    position: absolute; top: -32px; left: -52px; z-index: 0;
+    width: 104px; height: 104px; border-radius: 30px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    background: linear-gradient(160deg, #ffc84d, #f5a613);
+    box-shadow: 0 14px 30px rgba(160,110,10,0.30);
+    transform: rotate(-24deg);
+    animation: crownbob 4s ease-in-out infinite;
+  }
+  .crownchip svg { width: 54px; height: 54px; }
+  @keyframes crownbob {
+    0%, 100% { transform: rotate(-24deg) translateY(0); }
+    50%      { transform: rotate(-19deg) translateY(-9px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .crownchip { animation: none; }
+  }
+  /* Stacked and centred, there is no gutter to hang out into, so it tucks
+     back over the badge instead of off the edge. */
+  @media (max-width: 900px) {
+    /* Extra headroom so the chip clears the band's top edge, which clips. */
+    .premium { padding-top: 92px; }
+    .crownchip {
+      top: -44px; left: -6px; width: 78px; height: 78px; border-radius: 24px;
+      box-shadow: 0 10px 22px rgba(160,110,10,0.28);
+    }
+    .crownchip svg { width: 40px; height: 40px; }
+  }
+  .ptable { width: 100%; border-collapse: collapse; position: relative; }
+  .ptable th, .ptable td { padding: 13px 6px; }
+  .ptable thead th { font-size: 0.8rem; font-weight: 800; padding-top: 14px; }
+  .ptable thead .pfree { color: var(--ink-soft); }
+  .ppill {
+    display: inline-block; background: var(--gold-tile); color: #4a3000;
+    font-size: 0.74rem; font-weight: 800; letter-spacing: 0.02em;
+    padding: 5px 12px; border-radius: 999px;
+  }
+  .ptable tbody th {
+    text-align: left; font-size: 0.98rem; font-weight: 700;
+    color: rgba(33,33,56,0.82); padding-left: 14px;
+  }
+  .ptable tbody tr + tr th, .ptable tbody tr + tr td { border-top: 1px solid rgba(33,33,56,0.06); }
+  .pfree, .ppro { text-align: center; }
+  .pfree { width: 76px; }
+  .ppro  { width: 104px; background: rgba(250,181,46,0.12); }
+  .ptable thead .ppro { border-radius: 14px 14px 0 0; }
+  .ptable tbody tr:last-child .ppro { border-radius: 0 0 14px 14px; }
+  .tick {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 8px; color: #fff; font-size: 0.82rem;
+  }
+  .tick.on   { background: rgba(33,33,56,0.22); width: 21px; height: 21px; font-size: 0.72rem; }
+  .tick.gold { background: var(--mint-tile); }
+  .nope { color: rgba(33,33,56,0.22); font-weight: 800; }
+  .plabel { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); }
+  .plabel.strong { color: var(--ink); font-weight: 800; }
+  .pfine {
+    margin: 14px 12px 12px; font-size: 0.82rem; font-weight: 600;
+    line-height: 1.4; color: var(--ink-soft); text-align: center;
+  }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---- Footer ---- */
+  footer { border-top: 1px solid rgba(33,33,56,0.07); padding: 44px 0; text-align: center; }
+  footer .flinks { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  footer a { color: var(--ink-soft); text-decoration: none; font-weight: 600; }
+  footer a:hover { color: var(--accent); }
+  footer .fine { color: var(--ink-soft); font-size: 0.85rem; }
+  footer .fname { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--ink); margin-bottom: 14px; }
+  footer .fname img { width: 26px; height: 26px; border-radius: 7px; }
+
+  @media (max-width: 720px) {
+    .feature .row, .feature.rev .row { grid-template-columns: 1fr; direction: ltr; gap: 28px; text-align: center; }
+    .feature .copy p { margin-left: auto; margin-right: auto; }
+    .feature.rev .shot { order: -1; }
+    .feature { padding: 52px 0; }
+    .twists .copy p { margin-left: auto; margin-right: auto; }
+    /* Top padding stays deep: it is the crown chip's headroom. */
+    .premium { padding: 92px 0 62px; }
+    /* Shot on top, promises under it, all centred with the rest. */
+    .feel { padding: 56px 0 62px; }
+    .feelrow { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+    .feelcopy > p { margin-left: auto; margin-right: auto; }
+    .promises { max-width: 440px; margin-left: auto; margin-right: auto; text-align: left; }
+  }
+  /* The floating tiles need clear margin outside the 1080px content column;
+     below that they start landing on the badge and the table. */
+  @media (max-width: 1040px) {
+    .premium .tiles { display: none; }
+  }
+  /* Premium stacks earlier than the other rows: side by side, the table has
+     to squeeze five rows into half a column. */
+  @media (max-width: 900px) {
+    .prow { grid-template-columns: 1fr; gap: 34px; text-align: center; }
+    .pcopy > p { margin-left: auto; margin-right: auto; }
+    .pcard { max-width: 520px; margin: 0 auto; }
+  }
+  /* Small phones: let the display type shrink further so nothing crowds the
+     right edge at 375-390pt widths. */
+  @media (max-width: 430px) {
+    .hero h1 { font-size: clamp(2.1rem, 10.5vw, 2.8rem); }
+    .shelf h2, .feature .copy h2, .premium h2 { font-size: clamp(1.45rem, 6.6vw, 2rem); }
+    .hero .lede { font-size: clamp(1rem, 4.4vw, 1.3rem); }
+    /* Keep the header button on one line even on a 320pt phone. */
+    .badge-btn { font-size: 0.82rem; padding: 9px 14px; }
+    .wrap { padding: 0 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <img src="/apple-touch-icon.png?v=6" alt="Pocketful icon">
+    <span class="name">Pocketful</span>
+    <span class="spacer"></span>
+    <a class="badge-btn" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get on App Store</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="tiles" aria-hidden="true">
+    <div class="tile" style="left:6%;  top:14%; width:52px; height:52px; background:var(--blue-tile); transform:rotate(-13deg); font-size:22px;">7</div>
+    <div class="tile" style="left:88%; top:10%; width:40px; height:40px; background:var(--mint-tile); transform:rotate(8deg);">★</div>
+    <div class="tile" style="left:11%; top:60%; width:44px; height:44px; background:var(--coral-tile); transform:rotate(15deg); font-size:19px;">1</div>
+    <div class="tile" style="left:84%; top:54%; width:56px; height:56px; background:var(--gold-tile); transform:rotate(-9deg); font-size:24px;">3</div>
+    <div class="tile" style="left:79%; top:82%; width:38px; height:38px; background:var(--purple-tile); transform:rotate(12deg);">✦</div>
+    <div class="tile" style="left:15%; top:85%; width:34px; height:34px; background:var(--purple-tile); transform:rotate(-7deg);"></div>
+  </div>
+  <div class="wrap hero-inner">
+    <h1>A pocketful of<br>calm puzzles.</h1>
+    <p class="lede">Sudoku, Nonograms, and a whole shelf of beautiful logic games. Fresh daily challenges, every day.</p>
+    <div class="cta-row" id="get">
+      <a class="cta" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Download on the App Store</a>
+    </div>
+  </div>
+  <div class="hero-shot">
+    <img src="/shots/home.png?v=4" alt="The Pocketful home screen with a shelf of puzzle games" loading="lazy">
+  </div>
+</section>
+
+<!-- GAME SHELF -->
+<section class="shelf">
+  <div class="wrap">
+    <h2>So many games, one calm app.</h2>
+    <p>The classics you love and clever new favorites, with more on the way.<br><span class="tapme">Tap any game to see the board and how it plays.</span></p>
+    <div class="cards">
+      <button class="gcard" style="--rim:#a8cdf3; --tint:#dfeefe" data-board="/boards/sudoku.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/sudoku.png?v=4" alt="" loading="lazy"></span><span class="gname">Sudoku</span>
+        <span class="grules">Every row, every column, and every 3×3 box holds the numbers 1 to 9, each exactly once. Start from the given digits and the rest is pure elimination.</span>
+      </button>
+      <button class="gcard" style="--rim:#b9c4de; --tint:#e9edf8" data-board="/boards/nonogram.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/nonogram.png?v=4" alt="" loading="lazy"></span><span class="gname">Nonograms</span>
+        <span class="grules">The numbers around the edge say how the filled squares in each row and column are grouped, in order: 3 1 means a run of three, a gap, then one more. Every square is either filled or crossed off, and the pattern falls out of the clues alone.</span>
+      </button>
+      <button class="gcard" style="--rim:#f2d795; --tint:#fff4de" data-board="/boards/takuzu.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/duets.png?v=4" alt="" loading="lazy"></span><span class="gname">Duets</span>
+        <span class="grules">Fill the grid with two colors so every row and column holds an equal number of each, and three of a color never sit side by side. No number clues, just balance.</span>
+      </button>
+      <button class="gcard" style="--rim:#f4bfae; --tint:#ffede9" data-board="/boards/starBattle.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/stars.png?v=4" alt="" loading="lazy"></span><span class="gname">Stars</span>
+        <span class="grules">Place stars so every row, every column, and every colored region has exactly one. No two stars may ever touch, not even diagonally.</span>
+      </button>
+      <button class="gcard" style="--rim:#93dcee; --tint:#def6fc" data-board="/boards/hashi.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/bridges.png?v=4" alt="" loading="lazy"></span><span class="gname">Bridges</span>
+        <span class="grules">Each island's number is exactly how many bridges must touch it. Link them all into one connected network. Bridges run straight, never cross, and at most two join the same pair.</span>
+      </button>
+      <button class="gcard" style="--rim:#c9b4ef; --tint:#f0e9fd" data-board="/boards/shikaku.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/quilts.png?v=4" alt="" loading="lazy"></span><span class="gname">Quilts</span>
+        <span class="grules">Cut the whole grid into rectangles. Every number sits inside its own rectangle and says exactly how many squares that patch covers. No gaps, no overlaps.</span>
+      </button>
+      <button class="gcard" style="--rim:#a3e0c3; --tint:#e4faf0" data-board="/boards/peeks.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/peeks.png?v=4" alt="" loading="lazy"></span><span class="gname">Peeks</span>
+        <span class="grules">Nine squares, nine different shape-and-color tiles, no repeats. Each card below is a little photo of the finished board. It fits somewhere, and working out where is the whole game.</span>
+      </button>
+      <button class="gcard" style="--rim:#8fc3f5; --tint:#daebff" data-board="/boards/pipes.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/pipes.png?v=4" alt="" loading="lazy"></span><span class="gname">Pipes</span>
+        <span class="grules">Water pours from the source. Spin each piece a quarter-turn at a time until every pipe is fed by one connected network, with no open end left spilling.</span>
+      </button>
+      <button class="gcard" style="--rim:#bade87; --tint:#eaf8dd" data-board="/boards/slink.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/slink.png?v=4" alt="" loading="lazy"></span><span class="gname">Slink</span>
+        <span class="grules">Draw one unbroken trail that starts at 1, passes the numbers in order, and covers every single square on the way. No lifting, no crossing, one long slink.</span>
+      </button>
+      <button class="gcard" style="--rim:#f2c583; --tint:#feeed5" data-board="/boards/towers.png?v=2" aria-expanded="false">
+        <span class="gchip"><img src="/icons/towers.png?v=4" alt="" loading="lazy"></span><span class="gname">Towers</span>
+        <span class="grules">Every row and column holds each tower height exactly once. The edge numbers count the towers visible from there: a taller tower hides everything shorter behind it.</span>
+      </button>
+
+      <!-- The rules popover, moved and filled per card by the script below. -->
+      <div class="gpop" id="gpop" role="dialog" aria-labelledby="gpop-title" hidden>
+        <span class="gpop-arrow" aria-hidden="true"></span>
+        <button class="gpop-close" type="button" aria-label="Close">&times;</button>
+        <h3 id="gpop-title"></h3>
+        <img class="gpop-board" alt="" src="">
+        <p class="gpop-rules"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: daily -->
+<section class="feature twists">
+  <div class="wrap row">
+    <div class="copy">
+      <div class="kicker">Daily Challenges</div>
+      <h2>The daily bends<br>the rules.</h2>
+      <p>Every game's daily challenge plays a twist on the game you know. Sudoku grows thermometers. Nonograms fog over. Stars come in pairs, and bridges cross exactly once.</p>
+      <p class="streakline">A fresh board in every game, every morning. Solve any one of them and your streak lives another day.</p>
+    </div>
+    <div class="shot"><img src="/shots/daily.png?v=6" alt="The daily challenges screen: a 15-day streak and today's twisted boards, Fog, Slide and Crumble" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- FEATURE: how it feels to play -->
+<section class="feel">
+  <div class="wrap feelrow">
+    <div class="feelshot">
+      <img src="/shots/celebration.png?v=4" alt="A finished sudoku, with the board lit up in celebration" loading="lazy">
+    </div>
+    <div class="feelcopy">
+      <div class="kicker">How it feels</div>
+      <h2>Nothing here is<br>rushing you.</h2>
+      <p>Give a puzzle twenty minutes or two. Sit and stare at one square for a while. Nobody is counting, and the last square you fill always lands with a little party.</p>
+      <ul class="promises">
+        <li><b>No timer, no lives</b><span>Nothing counts down, and nothing counts you out.</span></li>
+        <li><b>Back out of anything</b><span>Undo as far as you like. A wrong turn costs you nothing.</span></li>
+        <li><b>Stop mid-square</b><span>Close it on the bus. The board is exactly where you left it.</span></li>
+        <li><b>Every game ends its own way</b><span>No two puzzles celebrate quite the same.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section class="premium">
+  <div class="tiles" aria-hidden="true">
+    <div class="tile" style="left:95%;  top:16%; width:38px; height:38px; background:var(--gold-tile); transform:rotate(9deg);">★</div>
+    <div class="tile" style="left:93%;  top:80%; width:30px; height:30px; background:var(--coral-tile); transform:rotate(-14deg);"></div>
+  </div>
+  <div class="wrap prow">
+    <div class="pcopy">
+      <!-- The app's own premium mark (Theme.swift CrownShape), same seven
+           points, and the same trick of stroking the fill colour over the
+           fill so every spike comes out rounded. -->
+      <span class="crownchip" aria-hidden="true">
+        <svg viewBox="-13 -13 126 126">
+          <path d="M14 84 L4 28 L32 48 L50 14 L68 48 L96 28 L86 84 Z"
+                fill="currentColor" stroke="currentColor" stroke-width="14" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="pbadge">Pocketful Premium</span>
+      <h2>All your favorite puzzles,<br>nothing in the way.</h2>
+      <p>One subscription opens the whole shelf, clears the ads out of it, and hands you every daily you ever missed.</p>
+      <a class="cta gold" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get on App Store</a>
+    </div>
+
+    <div class="pcard">
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr">Feature</span></th>
+            <th scope="col" class="pfree">Free</th>
+            <th scope="col" class="ppro"><span class="ppill">Premium</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Daily challenges &amp; streaks</th>
+            <td class="pfree"><span class="tick on">&check;</span></td>
+            <td class="ppro"><span class="tick gold">&check;</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Every puzzle game</th>
+            <td class="pfree"><span class="nope">&ndash;</span></td>
+            <td class="ppro"><span class="tick gold">&check;</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Ad-free</th>
+            <td class="pfree"><span class="nope">&ndash;</span></td>
+            <td class="ppro"><span class="tick gold">&check;</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Hints</th>
+            <td class="pfree"><span class="plabel">Limited</span></td>
+            <td class="ppro"><span class="plabel strong">Unlimited</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Replay past dailies</th>
+            <td class="pfree"><span class="nope">&ndash;</span></td>
+            <td class="ppro"><span class="tick gold">&check;</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="pfine">Premium games still turn up in every day's challenges, free forever. The daily is the whole game, on the house.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="fname"><img src="/apple-touch-icon.png?v=6" alt="">Pocketful</div>
+    <div class="flinks">
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="mailto:support@playpocketful.com">support@playpocketful.com</a>
+    </div>
+    <div class="fine">© 2026 Ben Yim. Made by puzzle lovers, for puzzle lovers.</div>
+  </div>
+</footer>
+
+<script>
+// Tap a game chip → a popover with that game's board and its rules, aimed at
+// the chip it came from. One popover element gets moved and refilled rather
+// than ten hidden ones sitting in the page.
+(function () {
+  var grid  = document.querySelector('.cards');
+  var pop   = document.getElementById('gpop');
+  var arrow = pop.querySelector('.gpop-arrow');
+  var title = pop.querySelector('#gpop-title');
+  var board = pop.querySelector('.gpop-board');
+  var rules = pop.querySelector('.gpop-rules');
+  var close = pop.querySelector('.gpop-close');
+  var open  = null;
+
+  function place(card) {
+    var gw = grid.clientWidth;
+    var w  = Math.min(320, gw);
+    pop.style.width = w + 'px';
+    var cx = card.offsetLeft + card.offsetWidth / 2;
+    var left = Math.max(0, Math.min(cx - w / 2, gw - w));
+    pop.style.left = left + 'px';
+    // Below the card by default; flip above when that would hang off the
+    // bottom of the shelf and cover the next section.
+    var below = card.offsetTop + card.offsetHeight + 14;
+    var above = card.offsetTop - pop.offsetHeight - 14;
+    var flip  = below + pop.offsetHeight > grid.clientHeight && above > 0;
+    pop.classList.toggle('above', flip);
+    pop.style.top = (flip ? above : below) + 'px';
+    arrow.style.left = Math.max(14, Math.min(cx - left - 8, w - 30)) + 'px';
+  }
+
+  function show(card) {
+    if (open === card) { hide(); return; }
+    if (open) open.setAttribute('aria-expanded', 'false');
+    open = card;
+    card.setAttribute('aria-expanded', 'true');
+    title.textContent = card.querySelector('.gname').textContent;
+    rules.textContent = card.querySelector('.grules').textContent;
+    // Wear the game's own board colour.
+    pop.style.setProperty('--tint', getComputedStyle(card).getPropertyValue('--tint').trim());
+    board.src = card.dataset.board;
+    board.alt = 'A ' + title.textContent + ' board in Pocketful';
+    pop.hidden = false;
+    place(card);
+    requestAnimationFrame(function () {
+      pop.classList.add('open');
+      place(card);            // re-place once the image box has its height
+      pop.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  }
+
+  function hide() {
+    if (!open) return;
+    open.setAttribute('aria-expanded', 'false');
+    var card = open;
+    open = null;
+    pop.classList.remove('open');
+    setTimeout(function () { if (!open) pop.hidden = true; }, 160);
+    card.focus({ preventScroll: true });
+  }
+
+  grid.querySelectorAll('.gcard').forEach(function (card) {
+    card.addEventListener('click', function () { show(card); });
+  });
+  close.addEventListener('click', hide);
+  // A board image arriving late changes the popover's height, so re-aim it.
+  board.addEventListener('load', function () { if (open) place(open); });
+  document.addEventListener('click', function (e) {
+    if (open && !pop.contains(e.target) && !e.target.closest('.gcard')) hide();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') hide();
+  });
+  window.addEventListener('resize', function () { if (open) place(open); });
+})();
+</script>
+
+</body>
+</html>
