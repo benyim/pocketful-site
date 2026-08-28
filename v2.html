@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocketful: Daily Puzzles</title>
+<meta name="description" content="A pocketful of calm logic puzzles: Sudoku, Nonograms, and a whole shelf of beautiful logic games. New daily challenges every day.">
+<meta property="og:title" content="Pocketful: Daily Puzzles">
+<meta property="og:description" content="A pocketful of calm logic puzzles. New daily challenges every day.">
+<meta property="og:image" content="https://playpocketful.com/apple-touch-icon.png?v=5">
+<meta name="apple-itunes-app" content="app-id=6792436106">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png?v=5">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5">
+<style>
+  /* V2: the editorial cut. Structure borrowed from the quietest games
+     pages: one idea per section, ink on white, hairline rules, and ALL the
+     color carried by the game art itself. Our spin: the app's compressed
+     display face (never a serif), its pastel chips, and its one accent. */
+  :root {
+    --ink: #212138;
+    --ink-soft: rgba(33, 33, 56, 0.62);
+    --ink-faint: rgba(33, 33, 56, 0.40);
+    --accent: #0085ff;
+    --accent-pastel: #a3cffc;
+    --hairline: rgba(33, 33, 56, 0.14);
+    --page: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    font-stretch: extra-condensed;
+    color: var(--ink); background: var(--page);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { font-weight: 900; letter-spacing: -0.01em; line-height: 1.05; }
+  a { color: inherit; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; }
+
+  /* Small-caps section label, the page's only ornament. */
+  .kicker {
+    font-weight: 800; font-size: 0.78rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px;
+  }
+
+  /* ---- Header: a thin ruled band, text only ---- */
+  header { border-bottom: 1px solid var(--hairline); background: var(--page); }
+  /* padding-block only: the shorthand `padding: 22px 0` was zeroing out
+     .wrap's horizontal padding (same specificity, declared later), which
+     pushed the header text to the screen edge on phones. */
+  .nav { display: flex; align-items: baseline; gap: 14px; padding-block: 22px; }
+  .nav .name { font-weight: 900; font-size: 1.3rem; letter-spacing: -0.01em; }
+  .nav .spacer { flex: 1; }
+  .nav a {
+    text-decoration: none; font-weight: 800; font-size: 0.78rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .nav a:hover { color: var(--accent); }
+  /* ---- Hero: scattered chips, one big word, one sentence ---- */
+  .hero { position: relative; text-align: center; padding: 120px 0 150px; overflow: hidden; }
+  /* The chip scatter fills the WHOLE section, full-bleed: chips ring the
+     headline through the top band, the side gutters and the foot, and the
+     centre column stays clear for the reading. Color lives here. */
+  .scatter { position: absolute; inset: 0; pointer-events: none; }
+  .scatter img {
+    position: absolute; border-radius: 22%; pointer-events: auto;
+    box-shadow: 0 10px 24px rgba(33,33,56,0.12);
+    transition: transform 0.25s ease;
+  }
+  .scatter img:hover { transform: scale(1.06) rotate(0deg) !important; }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero h1 { font-size: clamp(3.2rem, 9vw, 5.6rem); }
+  .hero .lede {
+    font-size: clamp(1.05rem, 3vw, 1.3rem); color: var(--ink-soft);
+    font-weight: 600; max-width: 44ch; margin: 20px auto 0;
+  }
+  .hero .applink {
+    display: inline-block; margin-top: 32px;
+    background: var(--accent-pastel); color: var(--ink);
+    font-weight: 800; font-size: 1rem; text-decoration: none;
+    padding: 14px 28px; border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .hero .applink:hover { transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.16); }
+  .hero .applink:active { transform: scale(0.97); }
+
+  /* ---- Ruled sections ---- */
+  section { border-top: 1px solid var(--hairline); padding: 92px 0; }
+  section h2 { font-size: clamp(1.9rem, 4.6vw, 2.8rem); max-width: 18ch; }
+  .sectionlede {
+    color: var(--ink-soft); font-weight: 600; font-size: 1.08rem;
+    max-width: 52ch; margin-top: 16px;
+  }
+
+  /* ---- The games: rows of chip + name + one line ---- */
+  .gamelist {
+    margin-top: 54px; display: grid;
+    grid-template-columns: 1fr 1fr; gap: 8px 56px;
+  }
+  .game {
+    display: flex; align-items: center; gap: 20px;
+    padding: 18px 0; border-top: 1px solid var(--hairline);
+    text-align: left;
+  }
+  .game img { width: 64px; height: 64px; border-radius: 15px; flex: none; }
+  .game b { display: block; font-size: 1.12rem; font-weight: 900; }
+  .game span {
+    display: block; margin-top: 2px; color: var(--ink-soft);
+    font-weight: 600; font-size: 0.94rem; line-height: 1.4;
+  }
+  .morenote {
+    margin-top: 26px; color: var(--ink-faint); font-weight: 700; font-size: 0.94rem;
+  }
+
+  /* ---- Feature bands: copy beside one honest product shot ---- */
+  .band { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 72px; align-items: center; }
+  .band.flip { grid-template-columns: 0.9fr 1.1fr; }
+  .band.flip .copy { order: 2; }
+  .band .shot { display: flex; justify-content: center; }
+  .band .shot img {
+    width: min(300px, 72vw); border-radius: 38px;
+    border: 1px solid var(--hairline);
+    box-shadow: 0 24px 48px rgba(33,33,56,0.12);
+  }
+  .band p { color: var(--ink-soft); font-weight: 600; font-size: 1.08rem; margin-top: 16px; max-width: 46ch; }
+
+  /* ---- Premium: quiet ruled table ---- */
+  .ptable { width: 100%; max-width: 560px; border-collapse: collapse; margin-top: 40px; }
+  .ptable th, .ptable td { padding: 13px 8px; border-top: 1px solid var(--hairline); }
+  .ptable thead th { border-top: 0; padding-top: 0; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+  .ptable tbody th { text-align: left; font-weight: 700; font-size: 0.98rem; }
+  .ptable td { text-align: center; width: 92px; font-weight: 800; }
+  .yes { color: var(--accent); }
+  .no { color: var(--ink-faint); }
+  .plabel { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); }
+  .pfine { margin-top: 22px; color: var(--ink-faint); font-weight: 600; font-size: 0.9rem; max-width: 52ch; }
+  .textlink { font-weight: 800; color: var(--accent); text-decoration: none; }
+  .textlink:hover { text-decoration: underline; }
+
+  /* ---- Footer ---- */
+  footer { border-top: 1px solid var(--hairline); padding: 40px 0 56px; }
+  .foot { display: flex; align-items: baseline; gap: 26px; flex-wrap: wrap; }
+  .foot .name { font-weight: 900; }
+  .foot a { color: var(--ink-soft); text-decoration: none; font-weight: 600; font-size: 0.92rem; }
+  .foot a:hover { color: var(--accent); }
+  .foot .fine { margin-left: auto; color: var(--ink-faint); font-size: 0.85rem; font-weight: 600; }
+
+  @media (max-width: 760px) {
+    section { padding: 64px 0; }
+    .gamelist { grid-template-columns: 1fr; gap: 0; }
+    .band, .band.flip { grid-template-columns: 1fr; gap: 40px; }
+    .band.flip .copy { order: 0; }
+    /* Phones keep the full-section ring, not a band: the top and foot rows
+       hold their places, and the four side chips half-bleed off the screen
+       so the narrow centre column stays clear for the reading. */
+    .hero { padding: 130px 0 120px; }
+    .scatter img { width: 58px !important; height: 58px !important; }
+    .scatter img:nth-child(1) { left: -6% !important; }  /* sudoku  */
+    .scatter img:nth-child(5) { left: 91% !important; }  /* bridges */
+    .scatter img:nth-child(6) { left: -7% !important; }  /* stars   */
+    .scatter img:nth-child(8) { left: 88% !important; }  /* seeds   */
+    .foot .fine { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <span class="name">Pocketful</span>
+    <span class="spacer"></span>
+    <a href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get the app</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="border-top: 0;">
+  <div class="scatter" aria-hidden="true">
+    <img src="/icons/sudoku.png?v=4"   style="width:100px; height:100px; left:5%;  top:12%; transform:rotate(-8deg);"  alt="">
+    <img src="/icons/nonogram.png?v=4" style="width:88px;  height:88px;  left:27%; top:3%;  transform:rotate(7deg);"   alt="">
+    <img src="/icons/slink.png?v=4"    style="width:104px; height:104px; left:51%; top:7%;  transform:rotate(-5deg);"  alt="">
+    <img src="/icons/quilts.png?v=4"   style="width:80px;  height:80px;  left:75%; top:4%;  transform:rotate(-10deg);" alt="">
+    <img src="/icons/bridges.png?v=4"  style="width:92px;  height:92px;  left:91%; top:32%; transform:rotate(8deg);"   alt="">
+    <img src="/icons/stars.png?v=4"    style="width:82px;  height:82px;  left:3%;  top:55%; transform:rotate(5deg);"   alt="">
+    <img src="/icons/duets.png?v=4"    style="width:88px;  height:88px;  left:20%; top:83%; transform:rotate(-6deg);"  alt="">
+    <img src="/icons/seeds.png?v=4"    style="width:78px;  height:78px;  left:74%; top:80%; transform:rotate(10deg);"  alt="">
+  </div>
+  <div class="wrap">
+    <h1>A pocketful of<br>calm puzzles.</h1>
+    <p class="lede">Sudoku, Nonograms, and a whole shelf of beautiful logic games, with a fresh set of daily challenges every day.</p>
+    <a class="applink" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Download on the App Store</a>
+  </div>
+</section>
+
+<!-- THE GAMES -->
+<section>
+  <div class="wrap">
+    <div class="kicker">The Games</div>
+    <h2>A shelf of quiet classics.</h2>
+    <p class="sectionlede">The classics you know and love, alongside fun new ways to challenge your brain that you won't find anywhere else.</p>
+    <div class="gamelist">
+      <div class="game">
+        <img src="/icons/mark-sudoku.png?v=1" alt="Sudoku">
+        <div><b>Sudoku</b><span>One through nine in every row, column and box.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-nonogram.png?v=1" alt="Nonograms">
+        <div><b>Nonograms</b><span>Follow the edge clues to fill the right squares.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-duets.png?v=1" alt="Duets">
+        <div><b>Duets</b><span>Balance two colors, never three in a row.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-stars.png?v=1" alt="Stars">
+        <div><b>Stars</b><span>One star per row, column and region. None may touch.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-bridges.png?v=1" alt="Bridges">
+        <div><b>Bridges</b><span>Link every island into one connected network.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-quilts.png?v=1" alt="Quilts">
+        <div><b>Quilts</b><span>Cut the grid into patches that match their numbers.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-peeks.png?v=1" alt="Peeks">
+        <div><b>Peeks</b><span>Nine tiles, no repeats. The little cards show you where.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-pipes.png?v=1" alt="Pipes">
+        <div><b>Pipes</b><span>Spin every piece until the water reaches everything.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-slink.png?v=1" alt="Slink">
+        <div><b>Slink</b><span>One unbroken trail through every square, in order.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-towers.png?v=1" alt="Towers">
+        <div><b>Towers</b><span>Line up the skyline so the edges see just enough.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-sums.png?v=1" alt="Sums">
+        <div><b>Sums</b><span>Place the tiles so every equation is true.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-tumble.png?v=1" alt="Tumble">
+        <div><b>Tumble</b><span>Tip the block end over end to the ring.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-seeds.png?v=1" alt="Seeds">
+        <div><b>Seeds</b><span>Read the seeds to color every tile.</span></div>
+      </div>
+      <div class="game">
+        <img src="/icons/mark-scoot.png?v=1" alt="Scoot">
+        <div><b>Scoot</b><span>Slide the blocks clear and escape the wall.</span></div>
+      </div>
+    </div>
+    <p class="morenote">…and more on the way.</p>
+  </div>
+</section>
+
+<!-- DAILY -->
+<section>
+  <div class="wrap band">
+    <div class="copy">
+      <div class="kicker">Daily Challenges</div>
+      <h2>The daily bends the rules.</h2>
+      <p>Every game's daily challenge plays a twist on the game you know. Sudoku grows thermometers. Nonograms fog over. Stars come in pairs, and bridges cross exactly once.</p>
+      <p>A fresh board in every game, every morning. Solve any one of them and your streak lives another day.</p>
+    </div>
+    <div class="shot">
+      <img src="/shots/daily.png?v=6" alt="The daily challenges screen: a 15-day streak and today's twisted boards, Fog, Slide and Crumble" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section>
+  <div class="wrap">
+    <div class="kicker">Pocketful Premium</div>
+    <h2>All your favorite puzzles, nothing in the way.</h2>
+    <p class="sectionlede">One subscription opens the whole shelf, clears the ads out of it, and hands you every daily you ever missed.</p>
+    <table class="ptable">
+      <thead>
+        <tr><th scope="col"><span style="position:absolute;width:1px;height:1px;overflow:hidden;">Feature</span></th><th scope="col">Free</th><th scope="col">Premium</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Daily challenges &amp; streaks</th><td class="yes">&check;</td><td class="yes">&check;</td></tr>
+        <tr><th scope="row">Every puzzle game</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+        <tr><th scope="row">Ad-free</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+        <tr><th scope="row">Hints</th><td class="plabel">Limited</td><td class="plabel">Unlimited</td></tr>
+        <tr><th scope="row">Replay past dailies</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+      </tbody>
+    </table>
+    <p class="pfine">Premium games still turn up in every day's challenges, free forever. The daily is the whole game, on the house.</p>
+    <p style="margin-top: 30px;"><a class="textlink" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get Pocketful on the App Store &rarr;</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <span class="name">Pocketful</span>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="mailto:support@playpocketful.com">support@playpocketful.com</a>
+    <span class="fine">© 2026 Ben Yim. Made by puzzle lovers, for puzzle lovers.</span>
+  </div>
+</footer>
+
+</body>
+</html>
