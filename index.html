@@ -69,6 +69,29 @@
     transition: transform 0.25s ease;
   }
   .scatter img:hover { transform: scale(1.06) rotate(0deg) !important; }
+  /* Entrance: the chips pop in one by one. The independent `scale`
+     property composes with each chip's inline rotate transform, so the
+     pop lands on the scattered pose without touching it (and the hover
+     transform stays untouched too). Composited properties only. */
+  @keyframes chip-pop {
+    0%   { scale: 0; opacity: 0; }
+    72%  { scale: 1.09; opacity: 1; }
+    100% { scale: 1; opacity: 1; }
+  }
+  .scatter img { animation: chip-pop 0.5s cubic-bezier(0.3, 1.2, 0.4, 1) backwards; }
+  /* One at a time, in DOM order: the scatter's DOM hops around the ring,
+     so the pops read as playful, not a sweep. */
+  .scatter img:nth-child(1) { animation-delay: 0.12s; }
+  .scatter img:nth-child(2) { animation-delay: 0.22s; }
+  .scatter img:nth-child(3) { animation-delay: 0.32s; }
+  .scatter img:nth-child(4) { animation-delay: 0.42s; }
+  .scatter img:nth-child(5) { animation-delay: 0.52s; }
+  .scatter img:nth-child(6) { animation-delay: 0.62s; }
+  .scatter img:nth-child(7) { animation-delay: 0.72s; }
+  .scatter img:nth-child(8) { animation-delay: 0.82s; }
+  @media (prefers-reduced-motion: reduce) {
+    .scatter img { animation: none; }
+  }
   .hero .wrap { position: relative; z-index: 1; }
   .hero h1 { font-size: clamp(3.2rem, 9vw, 5.6rem); }
   .hero .lede {
@@ -133,6 +156,24 @@
   .ptable tbody th { text-align: left; font-weight: 700; font-size: 0.98rem; }
   .ptable td { text-align: center; width: 92px; font-weight: 800; }
   .yes { color: var(--accent); }
+  /* The included ticks draw themselves top to bottom once the table
+     scrolls into view. pathLength="24" normalizes every tick to the same
+     dash length, so one dash setting draws them all. The JS only ever
+     ADDS the drawing behavior: with no script, ticks render fully drawn. */
+  .tick { width: 1.1em; height: 1.1em; vertical-align: -0.18em; }
+  .tick path {
+    fill: none; stroke: var(--ink); stroke-width: 3.2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .ptable.will-draw .tick path { stroke-dasharray: 24; stroke-dashoffset: 24; }
+  .ptable.will-draw.drawn .tick path {
+    animation: tick-draw 0.4s ease-out forwards;
+    animation-delay: calc(0.12s * var(--i));
+  }
+  @keyframes tick-draw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .ptable.will-draw .tick path { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  }
   .no { color: var(--ink-faint); }
   .plabel { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); }
   .pfine { margin-top: 22px; color: var(--ink-faint); font-weight: 600; font-size: 0.9rem; max-width: 52ch; }
@@ -288,11 +329,11 @@
         <tr><th scope="col"><span style="position:absolute;width:1px;height:1px;overflow:hidden;">Feature</span></th><th scope="col">Free</th><th scope="col">Premium</th></tr>
       </thead>
       <tbody>
-        <tr><th scope="row">Daily challenges &amp; streaks</th><td class="yes">&check;</td><td class="yes">&check;</td></tr>
-        <tr><th scope="row">Every puzzle game</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
-        <tr><th scope="row">Ad-free</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+        <tr><th scope="row">Daily challenges &amp; streaks</th><td class="yes"><svg class="tick" style="--i:0" viewBox="0 0 24 24" role="img" aria-label="Included"><path pathLength="24" d="M4.5 12.5l5.5 5.5L19.5 6.5"/></svg></td><td class="yes"><svg class="tick" style="--i:1" viewBox="0 0 24 24" role="img" aria-label="Included"><path pathLength="24" d="M4.5 12.5l5.5 5.5L19.5 6.5"/></svg></td></tr>
+        <tr><th scope="row">Every puzzle game</th><td class="no">&ndash;</td><td class="yes"><svg class="tick" style="--i:2" viewBox="0 0 24 24" role="img" aria-label="Included"><path pathLength="24" d="M4.5 12.5l5.5 5.5L19.5 6.5"/></svg></td></tr>
+        <tr><th scope="row">Ad-free</th><td class="no">&ndash;</td><td class="yes"><svg class="tick" style="--i:3" viewBox="0 0 24 24" role="img" aria-label="Included"><path pathLength="24" d="M4.5 12.5l5.5 5.5L19.5 6.5"/></svg></td></tr>
         <tr><th scope="row">Hints</th><td class="plabel">Limited</td><td class="plabel">Unlimited</td></tr>
-        <tr><th scope="row">Replay past dailies</th><td class="no">&ndash;</td><td class="yes">&check;</td></tr>
+        <tr><th scope="row">Replay past dailies</th><td class="no">&ndash;</td><td class="yes"><svg class="tick" style="--i:4" viewBox="0 0 24 24" role="img" aria-label="Included"><path pathLength="24" d="M4.5 12.5l5.5 5.5L19.5 6.5"/></svg></td></tr>
       </tbody>
     </table>
     <p class="pfine">Premium games still turn up in every day's challenges, free forever. The daily is the whole game, on the house.</p>
@@ -309,6 +350,18 @@
     <span class="fine">© 2026 Ben Yim. Made by puzzle lovers, for puzzle lovers.</span>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var table = document.querySelector('.ptable');
+    if (!table || !('IntersectionObserver' in window)) return;
+    table.classList.add('will-draw');
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { table.classList.add('drawn'); io.disconnect(); }
+    }, { threshold: 0.35 });
+    io.observe(table);
+  })();
+</script>
 
 </body>
 </html>
