@@ -7,10 +7,10 @@
 <meta name="description" content="A pocketful of calm logic puzzles: Sudoku, Nonograms, and a whole shelf of beautiful logic games. New daily challenges every day.">
 <meta property="og:title" content="Pocketful: Daily Puzzles">
 <meta property="og:description" content="A pocketful of calm logic puzzles. New daily challenges every day.">
-<meta property="og:image" content="https://playpocketful.com/apple-touch-icon.png?v=6">
+<meta property="og:image" content="https://playpocketful.com/apple-touch-icon.png?v=7">
 <meta name="apple-itunes-app" content="app-id=6792436106">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png?v=6">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png?v=7">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=7">
 <style>
   /* V2: the editorial cut. Structure borrowed from the quietest games
      pages: one idea per section, ink on white, hairline rules, and ALL the
@@ -52,6 +52,32 @@
   .nav { display: flex; align-items: baseline; gap: 14px; padding-block: 22px; }
   .nav .name { font-weight: 900; font-size: 1.3rem; letter-spacing: -0.01em; }
   .nav .spacer { flex: 1; }
+  /* Pocket himself, waving beside the wordmark. Baseline-aligned with the
+     name so his feet stand on the same line the type does, and squeezed to
+     a negative gap so he reads as part of the mark, not a separate item. */
+  .nav .waver {
+    height: 46px; width: auto; align-self: baseline;
+    /* Tucked in close, and shifted down with `translate` (a paint-only
+       move, so it cannot fight the flex baseline the way a negative margin
+       can in Safari): the sticker carries a margin of transparent canvas,
+       and a bare baseline sit leaves him hovering above the word. */
+    margin-left: -8px; translate: 0 14px;
+    transform-origin: 50% 100%;
+  }
+  /* The wave: mostly still, a small lean every few seconds, the same idle
+     cadence the app's cards blink on. Transform only, and off entirely
+     when the visitor asks for less motion. */
+  @keyframes cat-wave {
+    0%, 78%, 100% { transform: rotate(0deg); }
+    82% { transform: rotate(-7deg); }
+    86% { transform: rotate(5deg); }
+    90% { transform: rotate(-4deg); }
+    94% { transform: rotate(2deg); }
+  }
+  .nav .waver { animation: cat-wave 7s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .nav .waver { animation: none; }
+  }
   .nav a {
     text-decoration: none; font-weight: 800; font-size: 0.78rem;
     letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
@@ -68,7 +94,7 @@
     box-shadow: 0 10px 24px rgba(33,33,56,0.12);
     transition: transform 0.25s ease;
   }
-  .scatter img:hover { transform: scale(1.06) rotate(0deg) !important; }
+  .scatter img:hover { transform: scale(1.06); }
   /* Entrance: the chips pop in one by one. The independent `scale`
      property composes with each chip's inline rotate transform, so the
      pop lands on the scattered pose without touching it (and the hover
@@ -115,6 +141,46 @@
   .sectionlede {
     color: var(--ink-soft); font-weight: 600; font-size: 1.08rem;
     max-width: 52ch; margin-top: 16px;
+  }
+
+  /* ---- Meet Pocket: the copy in a clear centre column, his stickers
+     scattered around it. Same ring idea as the hero, the real sticker art
+     from the store pages instead of game chips. ---- */
+  .meet { position: relative; overflow: hidden; text-align: center; padding: 104px 0 112px; }
+  .meet .wrap { position: relative; z-index: 1; max-width: 700px; }
+  .meet .kicker { margin-bottom: 14px; }
+  .meet h2 { margin: 0 auto; max-width: none; }
+  .meet p {
+    color: var(--ink-soft); font-weight: 600; font-size: 1.08rem;
+    max-width: 46ch; margin: 18px auto 0;
+  }
+  .catscatter { position: absolute; inset: 0; pointer-events: none; }
+  .catscatter img {
+    position: absolute; height: auto; pointer-events: auto;
+    /* Stickers are cut-outs, so the shadow has to follow the shape: a
+       box-shadow would draw the bounding rectangle. */
+    filter: drop-shadow(0 10px 16px rgba(33, 33, 56, 0.20));
+    transition: transform 0.25s ease;
+  }
+  .catscatter img:hover { transform: scale(1.07) rotate(0deg) !important; }
+  /* A slow drift, a couple of pixels, each one on its own clock so the
+     group never breathes in time. Transform only. */
+  @keyframes cat-drift {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -7px; }
+  }
+  .catscatter img { animation: cat-drift 7s ease-in-out infinite; }
+  .catscatter img:nth-child(2n)  { animation-duration: 8.5s; animation-delay: -1.4s; }
+  .catscatter img:nth-child(3n)  { animation-duration: 9.5s; animation-delay: -3.1s; }
+  .catscatter img:nth-child(5n)  { animation-duration: 7.8s; animation-delay: -2.2s; }
+  @media (prefers-reduced-motion: reduce) {
+    .catscatter img { animation: none; }
+  }
+  /* Between the phone bands and a roomy desktop the ring closes in on the
+     copy: the sparkle cat is the one that reaches it first, so that slot
+     sits out until there is width for it. */
+  @media (min-width: 761px) and (max-width: 1080px) {
+    .catscatter img:nth-child(6) { display: none; }
   }
 
   /* ---- The games: rows of chip + name + one line ---- */
@@ -197,12 +263,28 @@
        hold their places, and the four side chips half-bleed off the screen
        so the narrow centre column stays clear for the reading. */
     .hero { padding: 130px 0 120px; }
-    .scatter img { width: 58px !important; height: 58px !important; }
-    .scatter img:nth-child(1) { left: -6% !important; }  /* sudoku  */
-    .scatter img:nth-child(5) { left: 91% !important; }  /* bridges */
-    .scatter img:nth-child(6) { left: -7% !important; }  /* stars   */
-    .scatter img:nth-child(8) { left: 88% !important; }  /* seeds   */
+    .scatter img:nth-child(1) { width: 84px !important; height: 84px !important; left: -10% !important; } /* sudoku  */
+    .scatter img:nth-child(2) { width: 44px !important; height: 44px !important; }                        /* nonogram */
+    .scatter img:nth-child(3) { width: 64px !important; height: 64px !important; }                        /* slink   */
+    .scatter img:nth-child(4) { width: 38px !important; height: 38px !important; }                        /* quilts  */
+    .scatter img:nth-child(5) { width: 76px !important; height: 76px !important; left: 88% !important; }  /* bridges */
+    .scatter img:nth-child(6) { width: 40px !important; height: 40px !important; left: -4% !important; }  /* stars   */
+    .scatter img:nth-child(7) { width: 60px !important; height: 60px !important; }                        /* duets   */
+    .scatter img:nth-child(8) { width: 50px !important; height: 50px !important; left: 88% !important; }  /* seeds   */
     .foot .fine { margin-left: 0; }
+    .nav .waver { height: 36px; translate: 0 11px; }
+    /* Meet Pocket on a narrow screen: the copy takes the full column, so
+       the ring becomes two bands, one of stickers above the headline and
+       one below the copy, and nothing sits over the reading. */
+    .meet { padding: 150px 0 160px; }
+    .catscatter img { width: 88px !important; }
+    .catscatter img:nth-child(1) { left: 1% !important;  top: 26px !important; }   /* read   */
+    .catscatter img:nth-child(2) { left: 34% !important; top: 8px !important; }    /* boba   */
+    .catscatter img:nth-child(3) { left: 67% !important; top: 22px !important; }   /* music  */
+    .catscatter img:nth-child(4) { left: 78% !important; top: auto !important; bottom: 10px; }  /* skate  */
+    .catscatter img:nth-child(5) { left: 0% !important;  top: auto !important; bottom: 26px; }  /* nap    */
+    .catscatter img:nth-child(6) { left: 28% !important; top: auto !important; bottom: 4px; }   /* sparkle */
+    .catscatter img:nth-child(7) { left: 53% !important; top: auto !important; bottom: 30px; }  /* laptop */
   }
 </style>
 </head>
@@ -211,6 +293,7 @@
 <header>
   <div class="wrap nav">
     <span class="name">Pocketful</span>
+    <img class="waver" src="/cat-wave.png?v=8" alt="" aria-hidden="true">
     <span class="spacer"></span>
     <a href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get the app</a>
   </div>
@@ -219,19 +302,38 @@
 <!-- HERO -->
 <section class="hero" style="border-top: 0;">
   <div class="scatter" aria-hidden="true">
-    <img src="/icons/sudoku.png?v=4"   style="width:100px; height:100px; left:5%;  top:12%; transform:rotate(-8deg);"  alt="">
-    <img src="/icons/nonogram.png?v=4" style="width:88px;  height:88px;  left:27%; top:3%;  transform:rotate(7deg);"   alt="">
-    <img src="/icons/slink.png?v=4"    style="width:104px; height:104px; left:51%; top:7%;  transform:rotate(-5deg);"  alt="">
-    <img src="/icons/quilts.png?v=4"   style="width:80px;  height:80px;  left:75%; top:4%;  transform:rotate(-10deg);" alt="">
-    <img src="/icons/bridges.png?v=4"  style="width:92px;  height:92px;  left:91%; top:32%; transform:rotate(8deg);"   alt="">
-    <img src="/icons/stars.png?v=4"    style="width:82px;  height:82px;  left:3%;  top:55%; transform:rotate(5deg);"   alt="">
-    <img src="/icons/duets.png?v=4"    style="width:88px;  height:88px;  left:20%; top:83%; transform:rotate(-6deg);"  alt="">
-    <img src="/icons/seeds.png?v=4"    style="width:78px;  height:78px;  left:74%; top:80%; transform:rotate(10deg);"  alt="">
+    <img src="/icons/sudoku.png?v=7"   style="width:168px; height:168px; left:-4%; top:14%;" alt="">
+    <img src="/icons/nonogram.png?v=7" style="width:72px;  height:72px;  left:25%; top:5%;"  alt="">
+    <img src="/icons/slink.png?v=7"    style="width:120px; height:120px; left:50%; top:0%;"  alt="">
+    <img src="/icons/quilts.png?v=7"   style="width:60px;  height:60px;  left:74%; top:12%;" alt="">
+    <img src="/icons/bridges.png?v=7"  style="width:148px; height:148px; left:92%; top:32%;" alt="">
+    <img src="/icons/stars.png?v=7"    style="width:64px;  height:64px;  left:9%;  top:62%;" alt="">
+    <img src="/icons/duets.png?v=7"    style="width:112px; height:112px; left:20%; top:84%;" alt="">
+    <img src="/icons/seeds.png?v=7"    style="width:88px;  height:88px;  left:79%; top:76%;" alt="">
   </div>
   <div class="wrap">
     <h1>A pocketful of<br>calm puzzles.</h1>
     <p class="lede">Sudoku, Nonograms, and a whole shelf of beautiful logic games, with a fresh set of daily challenges every day.</p>
     <a class="applink" href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Download on the App Store</a>
+  </div>
+</section>
+
+<!-- MEET POCKET -->
+<section class="meet">
+  <div class="catscatter" aria-hidden="true">
+    <img src="/stickers/read.png?v=8"    style="width:150px; left:4%;  top:20%; transform:rotate(-8deg);" alt="">
+    <img src="/stickers/boba.png?v=8"    style="width:128px; left:25%; top:2%;  transform:rotate(6deg);"  alt="">
+    <img src="/stickers/music.png?v=8"   style="width:136px; left:69%; top:2%;  transform:rotate(-6deg);" alt="">
+    <img src="/stickers/skate.png?v=8"   style="width:146px; left:90%; top:32%; transform:rotate(9deg);"  alt="">
+    <img src="/stickers/nap.png?v=8"     style="width:134px; left:7%;  top:66%; transform:rotate(5deg);"  alt="">
+    <img src="/stickers/sparkle.png?v=8" style="width:120px; left:23%; top:72%; transform:rotate(-7deg);" alt="">
+    <img src="/stickers/laptop.png?v=8"  style="width:142px; left:84%; top:70%; transform:rotate(-5deg);" alt="">
+  </div>
+  <div class="wrap">
+    <div class="kicker">Meet Pocket</div>
+    <h2>Solve puzzles.<br>Collect cats.</h2>
+    <p>Pocketful is built for calm, unhurried puzzling. Pick a game, take as long as you like, and let the board be the only thing you are thinking about.</p>
+    <p>Pocket is the cat who comes along for it. Keep solving and you collect his stickers as you go: a new one every week, more as your solves add up, and over a hundred to find.</p>
   </div>
 </section>
 
@@ -243,59 +345,59 @@
     <p class="sectionlede">The classics you know and love, alongside fun new ways to challenge your brain that you won't find anywhere else.</p>
     <div class="gamelist">
       <div class="game">
-        <img src="/icons/mark-sudoku.png?v=1" alt="Sudoku">
+        <img src="/icons/mark-sudoku.png?v=7" alt="Sudoku">
         <div><b>Sudoku</b><span>One through nine in every row, column and box.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-nonogram.png?v=1" alt="Nonograms">
+        <img src="/icons/mark-nonogram.png?v=7" alt="Nonograms">
         <div><b>Nonograms</b><span>Follow the edge clues to fill the right squares.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-duets.png?v=1" alt="Duets">
+        <img src="/icons/mark-duets.png?v=7" alt="Duets">
         <div><b>Duets</b><span>Balance two colors, never three in a row.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-stars.png?v=1" alt="Stars">
+        <img src="/icons/mark-stars.png?v=7" alt="Stars">
         <div><b>Stars</b><span>One star per row, column and region. None may touch.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-bridges.png?v=1" alt="Bridges">
+        <img src="/icons/mark-bridges.png?v=7" alt="Bridges">
         <div><b>Bridges</b><span>Link every island into one connected network.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-quilts.png?v=1" alt="Quilts">
+        <img src="/icons/mark-quilts.png?v=7" alt="Quilts">
         <div><b>Quilts</b><span>Cut the grid into patches that match their numbers.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-peeks.png?v=1" alt="Peeks">
+        <img src="/icons/mark-peeks.png?v=7" alt="Peeks">
         <div><b>Peeks</b><span>Nine tiles, no repeats. The little cards show you where.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-pipes.png?v=1" alt="Pipes">
+        <img src="/icons/mark-pipes.png?v=7" alt="Pipes">
         <div><b>Pipes</b><span>Spin every piece until the water reaches everything.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-slink.png?v=1" alt="Slink">
+        <img src="/icons/mark-slink.png?v=7" alt="Slink">
         <div><b>Slink</b><span>One unbroken trail through every square, in order.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-towers.png?v=1" alt="Towers">
+        <img src="/icons/mark-towers.png?v=7" alt="Towers">
         <div><b>Towers</b><span>Line up the skyline so the edges see just enough.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-sums.png?v=1" alt="Sums">
+        <img src="/icons/mark-sums.png?v=7" alt="Sums">
         <div><b>Sums</b><span>Place the tiles so every equation is true.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-tumble.png?v=1" alt="Tumble">
+        <img src="/icons/mark-tumble.png?v=7" alt="Tumble">
         <div><b>Tumble</b><span>Tip the block end over end to the ring.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-seeds.png?v=1" alt="Seeds">
+        <img src="/icons/mark-seeds.png?v=7" alt="Seeds">
         <div><b>Seeds</b><span>Read the seeds to color every tile.</span></div>
       </div>
       <div class="game">
-        <img src="/icons/mark-scoot.png?v=1" alt="Scoot">
+        <img src="/icons/mark-scoot.png?v=7" alt="Scoot">
         <div><b>Scoot</b><span>Slide the blocks clear and escape the wall.</span></div>
       </div>
     </div>
@@ -313,7 +415,7 @@
       <p>A fresh board in every game, every morning. Solve any one of them and your streak lives another day.</p>
     </div>
     <div class="shot">
-      <img src="/shots/daily.png?v=6" alt="The daily challenges screen: a 15-day streak and today's twisted boards, Fog, Slide and Crumble" loading="lazy">
+      <img src="/shots/daily.png?v=9" alt="The daily challenges screen: a 12-day streak, this week's sticker card, and today's twisted boards, Portals, Operators and Reprint" loading="lazy">
     </div>
   </div>
 </section>
