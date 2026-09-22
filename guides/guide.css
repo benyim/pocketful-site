@@ -1,0 +1,164 @@
+/* Guides: the front page's editorial language (ink on white, hairline rules,
+   the compressed display face, colour carried by the app's own art) applied
+   to a long-form lesson. One column of reading, figures that are real
+   captures of the app with teaching marks drawn over them. */
+:root {
+  --ink: #212138;
+  --ink-soft: rgba(33, 33, 56, 0.62);
+  --ink-faint: rgba(33, 33, 56, 0.40);
+  --accent: #0085ff;
+  --accent-pastel: #a3cffc;
+  --hairline: rgba(33, 33, 56, 0.14);
+  --page: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  font-stretch: extra-condensed;
+  color: var(--ink); background: var(--page);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+h1, h2, h3 { font-weight: 900; letter-spacing: -0.01em; line-height: 1.05; }
+a { color: inherit; }
+.wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; }
+.kicker {
+  font-weight: 800; font-size: 0.78rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px;
+}
+
+/* ---- Header, same as the front page ---- */
+header { border-bottom: 1px solid var(--hairline); background: var(--page); }
+.nav { display: flex; align-items: baseline; gap: 14px; padding-block: 22px; }
+.nav .name { font-weight: 900; font-size: 1.3rem; letter-spacing: -0.01em; text-decoration: none; }
+.nav .spacer { flex: 1; }
+.nav .waver { height: 46px; width: auto; align-self: baseline; margin-left: -8px; translate: 0 14px; transform-origin: 50% 100%; }
+@keyframes cat-wave {
+  0%, 78%, 100% { transform: rotate(0deg); }
+  82% { transform: rotate(-7deg); } 86% { transform: rotate(5deg); }
+  90% { transform: rotate(-4deg); } 94% { transform: rotate(2deg); }
+}
+.nav .waver { animation: cat-wave 7s ease-in-out infinite; }
+.nav a.cta {
+  text-decoration: none; font-weight: 800; font-size: 0.78rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
+}
+.nav a.cta:hover { color: var(--accent); }
+
+/* ---- Article ---- */
+.lede-block { padding-block: 72px 36px; } /* padding-block only: the shorthand zeroed .wrap's side padding */
+.lede-block h1 { font-size: clamp(2.6rem, 7vw, 4.4rem); max-width: 14ch; }
+.lede-block .lede {
+  font-size: clamp(1.05rem, 2.6vw, 1.25rem); color: var(--ink-soft);
+  font-weight: 600; max-width: 52ch; margin-top: 18px;
+}
+.lede-block .meta { margin-top: 18px; color: var(--ink-faint); font-weight: 700; font-size: 0.9rem; }
+article section { border-top: 1px solid var(--hairline); padding: 64px 0; }
+article h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); max-width: 22ch; }
+article p { max-width: 62ch; font-size: 1.08rem; font-weight: 500; color: var(--ink); margin-top: 16px; }
+article p.soft { color: var(--ink-soft); font-weight: 600; }
+article ul { max-width: 62ch; margin-top: 14px; padding-left: 1.2em; font-size: 1.08rem; font-weight: 500; }
+article li { margin-top: 6px; }
+article li b { font-weight: 900; }
+.rule {
+  margin-top: 22px; padding: 18px 22px; border-left: 4px solid var(--accent);
+  background: rgba(163, 207, 252, 0.18); border-radius: 0 14px 14px 0;
+  font-weight: 800; font-size: 1.15rem; max-width: 60ch;
+}
+
+/* ---- Figures: real captures, marks drawn over them ---- */
+.fig { margin-top: 34px; }
+.fig .frame {
+  position: relative; width: min(560px, 100%); margin: 0 auto;
+  border-radius: 24px; overflow: hidden;
+  border: 1px solid var(--hairline);
+  box-shadow: 0 18px 40px rgba(33, 33, 56, 0.10);
+  background: #fff;
+}
+.fig .frame img { display: block; width: 100%; height: auto; }
+.fig .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.fig figcaption {
+  margin: 14px auto 0; max-width: 52ch; text-align: center;
+  color: var(--ink-soft); font-weight: 600; font-size: 0.98rem; line-height: 1.45;
+}
+.fig.phone .frame { width: min(340px, 82vw); border-radius: 30px; }
+/* Three boards side by side: rows, columns, boxes */
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 34px; }
+.trio .fig { margin-top: 0; }
+.trio .fig .frame { border-radius: 18px; }
+.trio figcaption { font-size: 0.92rem; }
+
+/* Step-through: a stack of frames, one showing, a caption per frame,
+   dots to show where you are. Tap the figure or use the arrows. */
+.steps .frame { cursor: pointer; }
+.steps .frames { position: relative; }
+.steps .frames .f { position: relative; }
+.steps .frames .f:not(:first-child) { position: absolute; inset: 0; }
+.steps .frames .f { opacity: 0; transition: opacity 0.28s ease; }
+.steps .frames .f.on { opacity: 1; }
+.steps .frames .f:first-child { opacity: 1; } /* static fallback before JS runs */
+.steps.js .frames .f:first-child:not(.on) { opacity: 0; }
+.steps .ctl { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; }
+.steps .ctl button {
+  appearance: none; border: 1px solid var(--hairline); background: #fff; color: var(--ink);
+  width: 38px; height: 38px; border-radius: 50%; font-size: 1.1rem; font-weight: 900; cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.steps .ctl button:hover { background: var(--accent-pastel); }
+.steps .ctl button:active { transform: scale(0.94); }
+.steps .ctl .dots { display: flex; gap: 8px; }
+.steps .ctl .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--hairline); transition: background 0.2s ease, transform 0.2s ease; }
+.steps .ctl .dots i.on { background: var(--accent); transform: scale(1.25); }
+.steps figcaption { min-height: 3.2em; }
+.steps figcaption .step { font-weight: 900; color: var(--ink); margin-right: 6px; }
+
+/* Marks over the board */
+.mk-ring { fill: none; stroke: var(--accent); stroke-width: 9; }
+.mk-cand { fill: none; stroke: var(--ink); stroke-width: 6; stroke-dasharray: 14 10; opacity: 0.7; }
+.mk-x { stroke: var(--ink); stroke-width: 10; stroke-linecap: round; opacity: 0.55; }
+.mk-src { fill: none; stroke: var(--ink); stroke-width: 8; opacity: 0.8; }
+
+/* ---- Try it ---- */
+.cta-block { border-top: 1px solid var(--hairline); padding: 72px 0 96px; text-align: center; }
+.cta-block h2 { font-size: clamp(1.9rem, 4.6vw, 2.8rem); margin: 0 auto; }
+.cta-block p { color: var(--ink-soft); font-weight: 600; font-size: 1.08rem; max-width: 46ch; margin: 16px auto 0; }
+.applink {
+  display: inline-block; margin-top: 28px;
+  background: var(--accent-pastel); color: var(--ink);
+  font-weight: 800; font-size: 1rem; text-decoration: none;
+  padding: 14px 28px; border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.applink:hover { transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.16); }
+.applink:active { transform: scale(0.97); }
+
+footer { border-top: 1px solid var(--hairline); padding: 34px 0 56px; }
+.foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 22px; color: var(--ink-soft); font-weight: 700; font-size: 0.92rem; }
+.foot .name { font-weight: 900; color: var(--ink); font-size: 1.05rem; }
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--accent); }
+.foot .fine { margin-left: auto; color: var(--ink-faint); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav .waver { animation: none; }
+  .steps .frames .f { transition: none; }
+}
+@media (max-width: 760px) {
+  .nav .waver { height: 36px; translate: 0 11px; }
+  .lede-block { padding-block: 48px 24px; }
+  article section { padding: 48px 0; }
+  .trio { grid-template-columns: 1fr; gap: 26px; }
+  .trio .fig .frame { width: min(420px, 100%); }
+  .foot .fine { margin-left: 0; }
+}
+
+/* Questions: a smaller heading per question, same column */
+article h3 { font-size: 1.2rem; margin-top: 26px; max-width: 40ch; }
+article h3 + p { margin-top: 8px; }
+
+/* More marks (all guides): a tinted band over a run of cells, and arrows */
+.mk-band { fill: var(--accent); opacity: 0.16; }
+.mk-arrow { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; opacity: 0.8; fill: none; }
+.mk-head { fill: var(--ink); opacity: 0.8; }

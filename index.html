@@ -79,7 +79,7 @@
     .nav .waver { animation: none; }
   }
   .nav a {
-    text-decoration: none; font-weight: 800; font-size: 0.78rem;
+    margin-left: 22px; text-decoration: none; font-weight: 800; font-size: 0.78rem;
     letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
   }
   .nav a:hover { color: var(--accent); }
@@ -199,6 +199,13 @@
     display: block; margin-top: 2px; color: var(--ink-soft);
     font-weight: 600; font-size: 0.94rem; line-height: 1.4;
   }
+  /* A game's guide, linked from its own row (2026-09-21). Small, accent,
+     only on rows that have one. */
+  .game a.guide {
+    display: inline-block; margin-top: 6px; font-size: 0.9rem; font-weight: 800;
+    color: var(--accent); text-decoration: none;
+  }
+  .game a.guide:hover { text-decoration: underline; }
   .morenote {
     margin-top: 26px; color: var(--ink-faint); font-weight: 700; font-size: 0.94rem;
   }
@@ -295,6 +302,7 @@
     <span class="name">Pocketful</span>
     <img class="waver" src="/cat-wave.png?v=8" alt="" aria-hidden="true">
     <span class="spacer"></span>
+    <a href="/guides/">Guides</a>
     <a href="https://apps.apple.com/us/app/pocketful-daily-puzzles/id6792436106">Get the app</a>
   </div>
 </header>
@@ -346,59 +354,59 @@
     <div class="gamelist">
       <div class="game">
         <img src="/icons/mark-sudoku.png?v=7" alt="Sudoku">
-        <div><b>Sudoku</b><span>One through nine in every row, column and box.</span></div>
+        <div><b>Sudoku</b><span>One through nine in every row, column and box.</span><a class="guide" href="/guides/sudoku/">How to play Sudoku &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-nonogram.png?v=7" alt="Nonograms">
-        <div><b>Nonograms</b><span>Follow the edge clues to fill the right squares.</span></div>
+        <div><b>Nonograms</b><span>Follow the edge clues to fill the right squares.</span><a class="guide" href="/guides/nonogram/">How to play Nonograms &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-duets.png?v=7" alt="Duets">
-        <div><b>Duets</b><span>Balance two colors, never three in a row.</span></div>
+        <div><b>Duets</b><span>Balance two colors, never three in a row.</span><a class="guide" href="/guides/duets/">How to play Duets &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-stars.png?v=7" alt="Stars">
-        <div><b>Stars</b><span>One star per row, column and region. None may touch.</span></div>
+        <div><b>Stars</b><span>One star per row, column and region. None may touch.</span><a class="guide" href="/guides/stars/">How to play Stars &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-bridges.png?v=7" alt="Bridges">
-        <div><b>Bridges</b><span>Link every island into one connected network.</span></div>
+        <div><b>Bridges</b><span>Link every island into one connected network.</span><a class="guide" href="/guides/bridges/">How to play Bridges &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-quilts.png?v=7" alt="Quilts">
-        <div><b>Quilts</b><span>Cut the grid into patches that match their numbers.</span></div>
+        <div><b>Quilts</b><span>Cut the grid into patches that match their numbers.</span><a class="guide" href="/guides/quilts/">How to play Quilts &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-peeks.png?v=7" alt="Peeks">
-        <div><b>Peeks</b><span>Nine tiles, no repeats. The little cards show you where.</span></div>
+        <div><b>Peeks</b><span>Nine tiles, no repeats. The little cards show you where.</span><a class="guide" href="/guides/peeks/">How to play Peeks &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-pipes.png?v=7" alt="Pipes">
-        <div><b>Pipes</b><span>Spin every piece until the water reaches everything.</span></div>
+        <div><b>Pipes</b><span>Spin every piece until the water reaches everything.</span><a class="guide" href="/guides/pipes/">How to play Pipes &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-slink.png?v=7" alt="Slink">
-        <div><b>Slink</b><span>One unbroken trail through every square, in order.</span></div>
+        <div><b>Slink</b><span>One unbroken trail through every square, in order.</span><a class="guide" href="/guides/slink/">How to play Slink &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-towers.png?v=7" alt="Towers">
-        <div><b>Towers</b><span>Line up the skyline so the edges see just enough.</span></div>
+        <div><b>Towers</b><span>Line up the skyline so the edges see just enough.</span><a class="guide" href="/guides/towers/">How to play Towers &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-sums.png?v=7" alt="Sums">
-        <div><b>Sums</b><span>Place the tiles so every equation is true.</span></div>
+        <div><b>Sums</b><span>Place the tiles so every equation is true.</span><a class="guide" href="/guides/sums/">How to play Sums &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-tumble.png?v=7" alt="Tumble">
-        <div><b>Tumble</b><span>Tip the block end over end to the ring.</span></div>
+        <div><b>Tumble</b><span>Tip the block end over end to the ring.</span><a class="guide" href="/guides/tumble/">How to play Tumble &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-seeds.png?v=7" alt="Seeds">
-        <div><b>Seeds</b><span>Read the seeds to color every tile.</span></div>
+        <div><b>Seeds</b><span>Read the seeds to color every tile.</span><a class="guide" href="/guides/seeds/">How to play Seeds &rarr;</a></div>
       </div>
       <div class="game">
         <img src="/icons/mark-scoot.png?v=7" alt="Scoot">
-        <div><b>Scoot</b><span>Slide the blocks clear and escape the wall.</span></div>
+        <div><b>Scoot</b><span>Slide the blocks clear and escape the wall.</span><a class="guide" href="/guides/scoot/">How to play Scoot &rarr;</a></div>
       </div>
     </div>
     <p class="morenote">…and more on the way.</p>
@@ -447,6 +455,7 @@
 <footer>
   <div class="wrap foot">
     <span class="name">Pocketful</span>
+    <a href="/guides/">Guides</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="mailto:support@playpocketful.com">support@playpocketful.com</a>
     <span class="fine">© 2026 Ben Yim. Made by puzzle lovers, for puzzle lovers.</span>
