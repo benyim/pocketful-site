@@ -33,13 +33,6 @@ header { border-bottom: 1px solid var(--hairline); background: var(--page); }
 .nav { display: flex; align-items: baseline; gap: 14px; padding-block: 22px; }
 .nav .name { font-weight: 900; font-size: 1.3rem; letter-spacing: -0.01em; text-decoration: none; }
 .nav .spacer { flex: 1; }
-.nav .waver { height: 46px; width: auto; align-self: baseline; margin-left: -8px; translate: 0 14px; transform-origin: 50% 100%; }
-@keyframes cat-wave {
-  0%, 78%, 100% { transform: rotate(0deg); }
-  82% { transform: rotate(-7deg); } 86% { transform: rotate(5deg); }
-  90% { transform: rotate(-4deg); } 94% { transform: rotate(2deg); }
-}
-.nav .waver { animation: cat-wave 7s ease-in-out infinite; }
 .nav a.cta {
   text-decoration: none; font-weight: 800; font-size: 0.78rem;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
@@ -142,11 +135,9 @@ footer { border-top: 1px solid var(--hairline); padding: 34px 0 56px; }
 .foot .fine { margin-left: auto; color: var(--ink-faint); font-weight: 600; }
 
 @media (prefers-reduced-motion: reduce) {
-  .nav .waver { animation: none; }
   .steps .frames .f { transition: none; }
 }
 @media (max-width: 760px) {
-  .nav .waver { height: 36px; translate: 0 11px; }
   .lede-block { padding-block: 48px 24px; }
   article section { padding: 48px 0; }
   .trio { grid-template-columns: 1fr; gap: 26px; }
@@ -162,3 +153,9 @@ article h3 + p { margin-top: 8px; }
 .mk-band { fill: var(--accent); opacity: 0.16; }
 .mk-arrow { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; opacity: 0.8; fill: none; }
 .mk-head { fill: var(--ink); opacity: 0.8; }
+
+/* Classic guide -> its variant */
+.nextlink { padding-block: 0 56px; }
+.nextlink p { font-weight: 800; font-size: 1.12rem; }
+.nextlink a { color: var(--accent); text-decoration: none; }
+.nextlink a:hover { text-decoration: underline; }
